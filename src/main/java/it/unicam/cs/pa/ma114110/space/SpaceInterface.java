@@ -1,9 +1,8 @@
 package it.unicam.cs.pa.ma114110.space;
 
+import it.unicam.cs.pa.ma114110.area.Area;
 import it.unicam.cs.pa.ma114110.robot.Robot;
-import it.unicam.cs.pa.ma114110.robot.RobotInterface;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -12,18 +11,41 @@ import java.util.List;
  * <p>
  * his responsibility is to provide a list of all cells and list of all aras
  */
-public interface GridInterface {
+public interface SpaceInterface {
     /**
-     * @return list of all areas in the grid
-     */
-    List<Area> getAreas();
-
-    /**
-     * This method is used to add a new robot in the grid
+     * This method is used to add a robot to the space
+     * @param robot robot to add
      */
     void addRobot(Robot robot);
 
+    /**
+     * This method is used to remove a robot from the space
+     * @param robot robot to remove
+     */
+    void removeRobot(Robot robot);
+
+    /**
+     * This method is used to add area in the space
+     * @param area area to add
+     */
+    void addArea(Area area);
+
+    /**
+     * This method is used to get all robots in the space
+     * @return list of all robots
+     */
     List<Robot> getRobots();
 
+    /**
+     * This method is used to get a robot by coords
+     * @param coords coords of the robot
+     * @return robot or null if not found
+     */
     Robot getRobotByCoords(Coords coords);
+
+    /**
+     * This method is used to get all areas in the space
+     * @return list of all areas
+     */
+    List<Area> getAreas();
 }

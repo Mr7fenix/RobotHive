@@ -1,31 +1,30 @@
-package com.mr7fenix;
+package it.unicam.cs.pa.ma114110.space;
+
+import it.unicam.cs.pa.ma114110.space.CoordsInterface;
 
 import java.util.Objects;
 
 public class Coords implements CoordsInterface {
-    private final Integer x;
-    private final Integer y;
+    private final double x;
+    private final double y;
 
     /**
      * @param x the x coordinate for the specifico cell
      * @param y the y coordinate for the specifico cell
      */
-    public Coords(Integer x, Integer y) {
+    public Coords(double x, double y) {
         this.x = Objects.requireNonNull(x);
         this.y = Objects.requireNonNull(y);
     }
 
 
     @Override
-    public Integer getX() {
+    public double getX() {
         return x;
     }
 
     @Override
-    public Integer getY() {
+    public double getY() {
         return y;
     }
-
-
-
 }

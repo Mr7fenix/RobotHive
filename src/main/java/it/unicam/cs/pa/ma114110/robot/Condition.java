@@ -1,6 +1,6 @@
-package com.mr7fenix;
+package it.unicam.cs.pa.ma114110.robot;
 
 public enum Condition {
     MOVE,
-    STOP
+    STOP,
 }
