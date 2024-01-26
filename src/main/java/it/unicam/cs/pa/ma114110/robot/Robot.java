@@ -12,9 +12,8 @@ import it.unicam.cs.pa.ma114110.space.Coords;
 import it.unicam.cs.pa.ma114110.space.Direction;
 import it.unicam.cs.pa.ma114110.space.Space;
 
-import java.util.List;
+import java.util.LinkedList;
 import java.util.Objects;
-import java.util.Stack;
 
 public class Robot implements RobotInterface {
 
@@ -25,7 +24,7 @@ public class Robot implements RobotInterface {
     private Condition condition;
 
     //Stack of commands
-    private final Stack<SampleCommand> commandStack = new Stack<>();
+    private final LinkedList<SampleCommand> commandList = new LinkedList<>();
 
     //Last Saved Command
     private SampleCommand lastCommand;
@@ -130,17 +129,31 @@ public class Robot implements RobotInterface {
 
     @Override
     public void executeCommand(double dt, Space space) {
-        if (commandStack.isEmpty()) {
+        SampleCommand command = commandList.poll();
+        if (command == null) {
             return;
         }
 
-        SampleCommand command = commandStack.pop();
-
         if (command instanceof ContinueCommand) {
-            command = lastCommand;
-        }
+            if (lastCommand == null) {
+                return;
+            }
 
-        //Sort command to specific method
+            command = lastCommand;
+        } else this.lastCommand = command;
+
+        commandSorter(command, space, dt);
+
+    }
+
+    /**
+     * This method sort the command to the specific method
+     *
+     * @param command
+     * @param space
+     * @param dt
+     */
+    private void commandSorter (SampleCommand command, Space space, Double dt){
         switch (command) {
             case MoveRandomCommand cmd -> moveToRandomDirection(cmd, dt);
             case MoveCommand cmd -> moveToSpecificDirection(cmd, dt);
@@ -150,14 +163,11 @@ public class Robot implements RobotInterface {
             case StopCommand cmd -> stop();
             default -> throw new IllegalStateException("Unexpected value: " + command);
         }
-
-        //Robot save command for future
-        this.lastCommand = command;
     }
 
     @Override
     public <T extends SampleCommand> void addCommands(T command) {
-        commandStack.push(command);
+        commandList.add(command);
     }
 
     @Override

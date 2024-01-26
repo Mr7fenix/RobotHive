@@ -1,6 +1,7 @@
 package it.unicam.cs.pa.ma114110.robot;
 
 import it.unicam.cs.pa.ma114110.Simulator;
+import it.unicam.cs.pa.ma114110.command.ContinueCommand;
 import it.unicam.cs.pa.ma114110.command.move.FollowCommand;
 import it.unicam.cs.pa.ma114110.command.move.MoveCommand;
 import it.unicam.cs.pa.ma114110.command.move.MoveRandomCommand;
@@ -119,5 +120,23 @@ class RobotTest {
         robot.executeCommand(1.0, null);
         assertEquals(Condition.MOVE, robot.getCondition());
         assertEquals(5, robot.getCoords().getX());
+    }
+
+    @Test
+    void continueCommand() {
+        Space space = new Space();
+        Robot robot = new Robot(new Coords(0, 0));
+
+        space.addRobot(robot);
+
+        robot.addCommands(new MoveCommand(new Direction(1, -1), 5));
+        robot.addCommands(new ContinueCommand());
+
+        robot.executeCommand(1.0, space);
+        robot.executeCommand(1.0, space);
+
+        assertEquals(Condition.MOVE, robot.getCondition());
+        assertEquals(10, robot.getCoords().getX());
+        assertEquals(-10, robot.getCoords().getY());
     }
 }
