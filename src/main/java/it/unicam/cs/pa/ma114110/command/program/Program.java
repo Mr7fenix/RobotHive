@@ -10,6 +10,9 @@ public class Program implements ProgramInterface {
     private final Space space;
 
     public Program(Space space) {
+        if (space == null) {
+            throw new NullPointerException("Space cannot be null");
+        }
         this.space = space;
     }
 
@@ -31,7 +34,7 @@ public class Program implements ProgramInterface {
     @Override
     public <T extends SampleCommand> void addCommand(T command) {
         if (command == null) {
-            throw new IllegalArgumentException("Command cannot be null");
+            throw new NullPointerException("Command cannot be null");
         }
 
         this.commandList.add(command);
@@ -50,7 +53,7 @@ public class Program implements ProgramInterface {
     @Override
     public void setLastCommand(SampleCommand command) {
         if (command == null) {
-            throw new IllegalArgumentException("Command cannot be null");
+            throw new NullPointerException("Command cannot be null");
         }
 
         commandList.set(commandList.size() - 1, command);
@@ -59,7 +62,7 @@ public class Program implements ProgramInterface {
     @Override
     public void setCommandList(LinkedList<SampleCommand> commandList) {
         if (commandList == null) {
-            throw new IllegalArgumentException("Command list cannot be null");
+            throw new NullPointerException("Command list cannot be null");
         }
 
         this.commandList = commandList;

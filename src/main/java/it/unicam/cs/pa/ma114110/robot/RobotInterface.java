@@ -7,13 +7,7 @@ package it.unicam.cs.pa.ma114110.robot;
  * License: MIT License
  */
 
-import it.unicam.cs.pa.ma114110.command.SampleCommand;
-import it.unicam.cs.pa.ma114110.command.move.FollowCommand;
 import it.unicam.cs.pa.ma114110.command.program.Program;
-import it.unicam.cs.pa.ma114110.command.signal.SignalCommand;
-import it.unicam.cs.pa.ma114110.command.move.MoveCommand;
-import it.unicam.cs.pa.ma114110.command.move.MoveRandomCommand;
-import it.unicam.cs.pa.ma114110.command.signal.UnSignalCommand;
 import it.unicam.cs.pa.ma114110.space.Coords;
 
 public interface RobotInterface {
