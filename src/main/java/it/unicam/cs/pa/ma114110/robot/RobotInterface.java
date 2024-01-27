@@ -35,7 +35,6 @@ public interface RobotInterface {
      * This executes the command in stack
      *
      * @param dt    the time to execute the command
-     * @param space the space where the robot is
      */
     void executeNextCommand(double dt);
 
