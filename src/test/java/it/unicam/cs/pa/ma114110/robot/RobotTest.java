@@ -1,7 +1,10 @@
 package it.unicam.cs.pa.ma114110.robot;
 
+import it.unicam.cs.pa.ma114110.area.SquaredArea;
 import it.unicam.cs.pa.ma114110.command.ContinueCommand;
 import it.unicam.cs.pa.ma114110.command.StopCommand;
+import it.unicam.cs.pa.ma114110.command.iteration.Repeat;
+import it.unicam.cs.pa.ma114110.command.iteration.Until;
 import it.unicam.cs.pa.ma114110.command.move.FollowCommand;
 import it.unicam.cs.pa.ma114110.command.move.MoveCommand;
 import it.unicam.cs.pa.ma114110.command.move.MoveRandomCommand;
@@ -149,6 +152,56 @@ class RobotTest {
         assertEquals(3, robot.getCoords().getX());
         assertEquals(3, robot.getCoords().getY());
         assertEquals(Condition.MOVE, robot.getCondition());
+    }
+
+    @Test
+    void UntilCommand() {
+        Space space = new Space();
+        Program program = new Program(space);
+
+        program.addCommand(new Until("signal", getIterationConfig()));
+
+        Robot robot = new Robot(new Coords(1, 1));
+
+        space.addRobot(robot);
+        space.addArea(new SquaredArea("signal", new Coords(1, 6), 1, 1));
+
+        robot.addProgram(program);
+        robot.executeNextCommand(1);
+
+        assertEquals(1, robot.getCoords().getX());
+        assertEquals(6, robot.getCoords().getY());
+    }
+
+    @Test
+    void RepeatCommand() {
+        Space space = new Space();
+        Program program = new Program(space);
+
+        program.addCommand(new Repeat(5, getIterationConfig()));
+
+        Robot robot = new Robot(new Coords(1, 1));
+
+        robot.addProgram(program);
+        robot.executeNextCommand(1);
+
+        assertEquals(1, robot.getCoords().getX());
+        assertEquals(26, robot.getCoords().getY());
+    }
+
+
+
+    private Program getIterationConfig (){
+        Space space = new Space();
+        Program program = new Program(space);
+
+        program.addCommand(new MoveCommand(new Direction(0, 1), 1));
+        program.addCommand(new MoveCommand(new Direction(0, 1), 1));
+        program.addCommand(new MoveCommand(new Direction(0, 1), 1));
+        program.addCommand(new MoveCommand(new Direction(0, 1), 1));
+        program.addCommand(new MoveCommand(new Direction(0, 1), 1));
+
+        return program;
     }
 
     @Test
