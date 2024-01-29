@@ -2,7 +2,7 @@ package it.unicam.cs.pa.ma114110.area;
 
 import it.unicam.cs.pa.ma114110.space.Coords;
 
-public class Area implements AreaInterface {
+public abstract class Area implements AreaInterface {
     private final String label;
 
     Area(String label) {

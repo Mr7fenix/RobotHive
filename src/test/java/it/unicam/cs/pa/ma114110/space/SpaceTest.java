@@ -47,7 +47,7 @@ class SpaceTest {
     void addArea() {
         Space space = new Space();
         assertThrowsExactly(IllegalArgumentException.class, () -> space.addArea(null));
-        space.addArea(new SquaredArea("Ciao", new Coords(0, 0), new Coords(1, 1)));
+        space.addArea(new SquaredArea("Ciao", new Coords(0, 0), 1, 1));
         assertEquals(1, space.getAreas().size());
     }
 }

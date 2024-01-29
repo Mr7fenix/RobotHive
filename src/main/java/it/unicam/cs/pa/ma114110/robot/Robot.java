@@ -3,6 +3,10 @@ package it.unicam.cs.pa.ma114110.robot;
 import it.unicam.cs.pa.ma114110.command.ContinueCommand;
 import it.unicam.cs.pa.ma114110.command.SampleCommand;
 import it.unicam.cs.pa.ma114110.command.StopCommand;
+import it.unicam.cs.pa.ma114110.command.iteration.DoForever;
+import it.unicam.cs.pa.ma114110.command.iteration.IterationCommand;
+import it.unicam.cs.pa.ma114110.command.iteration.Repeat;
+import it.unicam.cs.pa.ma114110.command.iteration.Until;
 import it.unicam.cs.pa.ma114110.command.move.FollowCommand;
 import it.unicam.cs.pa.ma114110.command.move.MoveCommand;
 import it.unicam.cs.pa.ma114110.command.move.MoveRandomCommand;
@@ -11,6 +15,7 @@ import it.unicam.cs.pa.ma114110.command.signal.SignalCommand;
 import it.unicam.cs.pa.ma114110.command.signal.UnSignalCommand;
 import it.unicam.cs.pa.ma114110.space.Coords;
 import it.unicam.cs.pa.ma114110.space.Direction;
+import it.unicam.cs.pa.ma114110.space.Space;
 
 import java.util.Objects;
 
@@ -42,10 +47,12 @@ public class Robot implements RobotInterface {
         this.coords = coords;
 
     }
+
     @Override
     public Condition getCondition() {
         return this.condition;
     }
+
     @Override
     public Coords getCoords() {
         return this.coords;
@@ -221,6 +228,7 @@ public class Robot implements RobotInterface {
 
     /**
      * This method sort the command to the specific method
+     * Commands are: MoveRandomCommand, MoveCommand, UnSignalCommand, SignalCommand, FollowCommand, StopCommand, IterationCommand
      *
      * @param command to sort
      * @param dt      delta time
@@ -233,7 +241,74 @@ public class Robot implements RobotInterface {
             case SignalCommand cmd -> signal(cmd);
             case FollowCommand cmd -> follow(cmd, dt);
             case StopCommand cmd -> stop();
+            case IterationCommand cmd -> iterationCommandSorter(cmd, dt);
             default -> throw new IllegalStateException("Unexpected value: " + command);
         }
+    }
+
+    /**
+     * This method sort the iteration command to the specific method.
+     * Iteration command are: Repeat, Until, DoForever
+     *
+     * @param command to sort
+     * @param dt      delta time
+     */
+    private void iterationCommandSorter(IterationCommand command, Double dt) {
+        switch (command) {
+            case Repeat cmd -> repeat(cmd, dt);
+            case Until cmd -> until(cmd, dt);
+            case DoForever cmd -> doForever(cmd, dt);
+            default -> throw new IllegalStateException("Unexpected value: " + command);
+        }
+    }
+
+    /**
+     * This method repeat specific program for the specific times
+     *
+     * @param cmd iteration command
+     * @param dt  delta time
+     */
+
+    private void repeat(Repeat cmd, Double dt) {
+        for (int i = 0; i < cmd.getTimes(); i++) {
+            for (SampleCommand command : cmd.getProgram().getCommandList()) {
+                commandSorter(command, dt);
+            }
+        }
+    }
+
+    /**
+     * This method repeat specific program until the specific label is not set
+     *
+     * @param cmd iteration command
+     * @param dt  delta time
+     */
+    private void until(Until cmd, Double dt) {
+        Space space = program.getSpace();
+        space.getAreas().forEach(area -> {
+            if (area.getLabel().equals(cmd.getLabel())) {
+                if (!area.contains(coords)) {
+                    for (SampleCommand command : cmd.getProgram().getCommandList()) {
+                        commandSorter(command, dt);
+                    }
+                }
+            }
+        });
+    }
+
+    /**
+     * This method repeat specific program forever
+     *
+     * @param cmd iteration command
+     * @param dt  delta time
+     */
+    private void doForever(DoForever cmd, Double dt) {
+        program.addCommand(cmd);
+
+        for (SampleCommand command : cmd.getProgram().getCommandList()) {
+            commandSorter(command, dt);
+        }
+
+        executeNextCommand(dt);
     }
 }

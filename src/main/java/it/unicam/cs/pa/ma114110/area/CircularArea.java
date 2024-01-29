@@ -28,4 +28,10 @@ public class CircularArea extends Area {
     public Coords getCenter() {
         return center;
     }
+
+    @Override
+    public boolean contains(Coords coords) {
+        double distance = Math.sqrt(Math.pow(coords.getX() - center.getX(), 2) + Math.pow(coords.getY() - center.getY(), 2));
+        return distance <= radius;
+    }
 }
