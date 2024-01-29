@@ -2,9 +2,10 @@ package it.unicam.cs.pa.ma114110.robot;
 
 import it.unicam.cs.pa.ma114110.area.SquaredArea;
 import it.unicam.cs.pa.ma114110.command.ContinueCommand;
+import it.unicam.cs.pa.ma114110.command.SampleCommand;
 import it.unicam.cs.pa.ma114110.command.StopCommand;
-import it.unicam.cs.pa.ma114110.command.iteration.Repeat;
-import it.unicam.cs.pa.ma114110.command.iteration.Until;
+import it.unicam.cs.pa.ma114110.command.iteration.RepeatCommand;
+import it.unicam.cs.pa.ma114110.command.iteration.UntilCommand;
 import it.unicam.cs.pa.ma114110.command.move.FollowCommand;
 import it.unicam.cs.pa.ma114110.command.move.MoveCommand;
 import it.unicam.cs.pa.ma114110.command.move.MoveRandomCommand;
@@ -15,6 +16,8 @@ import it.unicam.cs.pa.ma114110.space.Coords;
 import it.unicam.cs.pa.ma114110.space.Direction;
 import it.unicam.cs.pa.ma114110.space.Space;
 import org.junit.jupiter.api.Test;
+
+import java.util.LinkedList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -159,7 +162,7 @@ class RobotTest {
         Space space = new Space();
         Program program = new Program(space);
 
-        program.addCommand(new Until("signal", getIterationConfig()));
+        program.addCommand(new UntilCommand("signal", getIterationConfig()));
 
         Robot robot = new Robot(new Coords(1, 1));
 
@@ -178,7 +181,7 @@ class RobotTest {
         Space space = new Space();
         Program program = new Program(space);
 
-        program.addCommand(new Repeat(5, getIterationConfig()));
+        program.addCommand(new RepeatCommand(5, getIterationConfig()));
 
         Robot robot = new Robot(new Coords(1, 1));
 
@@ -189,9 +192,7 @@ class RobotTest {
         assertEquals(26, robot.getCoords().getY());
     }
 
-
-
-    private Program getIterationConfig (){
+    private LinkedList<SampleCommand> getIterationConfig (){
         Space space = new Space();
         Program program = new Program(space);
 

@@ -1,21 +1,22 @@
 package it.unicam.cs.pa.ma114110.command.iteration;
 
 import it.unicam.cs.pa.ma114110.command.SampleCommand;
-import it.unicam.cs.pa.ma114110.command.program.Program;
+
+import java.util.LinkedList;
 
 public abstract class IterationCommand extends SampleCommand {
-    private final Program program;
+    private final LinkedList<SampleCommand> commandList;
 
 
-    public IterationCommand (Program program){
-        if (program == null) {
+    public IterationCommand (LinkedList<SampleCommand> commandList){
+        if (commandList == null) {
             throw new NullPointerException("Program cannot be null");
         }
 
-        this.program = program;
+        this.commandList = commandList;
     }
 
-    public Program getProgram() {
-        return program;
+    public LinkedList<SampleCommand> getCommandList() {
+        return commandList;
     }
 }

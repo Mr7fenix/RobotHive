@@ -3,10 +3,10 @@ package it.unicam.cs.pa.ma114110.robot;
 import it.unicam.cs.pa.ma114110.command.ContinueCommand;
 import it.unicam.cs.pa.ma114110.command.SampleCommand;
 import it.unicam.cs.pa.ma114110.command.StopCommand;
-import it.unicam.cs.pa.ma114110.command.iteration.DoForever;
+import it.unicam.cs.pa.ma114110.command.iteration.ForeverCommand;
 import it.unicam.cs.pa.ma114110.command.iteration.IterationCommand;
-import it.unicam.cs.pa.ma114110.command.iteration.Repeat;
-import it.unicam.cs.pa.ma114110.command.iteration.Until;
+import it.unicam.cs.pa.ma114110.command.iteration.RepeatCommand;
+import it.unicam.cs.pa.ma114110.command.iteration.UntilCommand;
 import it.unicam.cs.pa.ma114110.command.move.FollowCommand;
 import it.unicam.cs.pa.ma114110.command.move.MoveCommand;
 import it.unicam.cs.pa.ma114110.command.move.MoveRandomCommand;
@@ -255,9 +255,9 @@ public class Robot implements RobotInterface {
      */
     private void iterationCommandSorter(IterationCommand command, Double dt) {
         switch (command) {
-            case Repeat cmd -> repeat(cmd, dt);
-            case Until cmd -> until(cmd, dt);
-            case DoForever cmd -> doForever(cmd, dt);
+            case RepeatCommand cmd -> repeat(cmd, dt);
+            case UntilCommand cmd -> until(cmd, dt);
+            case ForeverCommand cmd -> doForever(cmd, dt);
             default -> throw new IllegalStateException("Unexpected value: " + command);
         }
     }
@@ -269,9 +269,9 @@ public class Robot implements RobotInterface {
      * @param dt  delta time
      */
 
-    private void repeat(Repeat cmd, Double dt) {
+    private void repeat(RepeatCommand cmd, Double dt) {
         for (int i = 0; i < cmd.getTimes(); i++) {
-            for (SampleCommand command : cmd.getProgram().getCommandList()) {
+            for (SampleCommand command : cmd.getCommandList()) {
                 commandSorter(command, dt);
             }
         }
@@ -283,12 +283,12 @@ public class Robot implements RobotInterface {
      * @param cmd iteration command
      * @param dt  delta time
      */
-    private void until(Until cmd, Double dt) {
+    private void until(UntilCommand cmd, Double dt) {
         Space space = program.getSpace();
         space.getAreas().forEach(area -> {
             if (area.getLabel().equals(cmd.getLabel())) {
                 if (!area.contains(coords)) {
-                    for (SampleCommand command : cmd.getProgram().getCommandList()) {
+                    for (SampleCommand command : cmd.getCommandList()) {
                         commandSorter(command, dt);
                     }
                 }
@@ -302,10 +302,10 @@ public class Robot implements RobotInterface {
      * @param cmd iteration command
      * @param dt  delta time
      */
-    private void doForever(DoForever cmd, Double dt) {
+    private void doForever(ForeverCommand cmd, Double dt) {
         program.addCommand(cmd);
 
-        for (SampleCommand command : cmd.getProgram().getCommandList()) {
+        for (SampleCommand command : cmd.getCommandList()) {
             commandSorter(command, dt);
         }
 
