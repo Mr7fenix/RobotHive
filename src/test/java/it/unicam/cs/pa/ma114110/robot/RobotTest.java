@@ -194,15 +194,15 @@ class RobotTest {
 
     private LinkedList<SampleCommand> getIterationConfig (){
         Space space = new Space();
-        Program program = new Program(space);
+        LinkedList<SampleCommand> commandList = new LinkedList<>();
 
-        program.addCommand(new MoveCommand(new Direction(0, 1), 1));
-        program.addCommand(new MoveCommand(new Direction(0, 1), 1));
-        program.addCommand(new MoveCommand(new Direction(0, 1), 1));
-        program.addCommand(new MoveCommand(new Direction(0, 1), 1));
-        program.addCommand(new MoveCommand(new Direction(0, 1), 1));
+        commandList.add(new MoveCommand(new Direction(0, 1), 1));
+        commandList.add(new MoveCommand(new Direction(0, 1), 1));
+        commandList.add(new MoveCommand(new Direction(0, 1), 1));
+        commandList.add(new MoveCommand(new Direction(0, 1), 1));
+        commandList.add(new MoveCommand(new Direction(0, 1), 1));
 
-        return program;
+        return commandList;
     }
 
     @Test
