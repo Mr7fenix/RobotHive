@@ -1,6 +1,6 @@
 package it.unicam.cs.pa.ma114110.robot;
 
-import it.unicam.cs.pa.ma114110.area.SquaredArea;
+import it.unicam.cs.pa.ma114110.area.RectangleArea;
 import it.unicam.cs.pa.ma114110.command.ContinueCommand;
 import it.unicam.cs.pa.ma114110.command.SampleCommand;
 import it.unicam.cs.pa.ma114110.command.StopCommand;
@@ -167,7 +167,7 @@ class RobotTest {
         Robot robot = new Robot(new Coords(1, 1));
 
         environment.addRobot(robot);
-        environment.addArea(new SquaredArea("signal", new Coords(1, 6), 1, 1));
+        environment.addArea(new RectangleArea("signal", new Coords(1, 6), 1, 1));
 
         robot.addProgram(program);
         robot.executeNextCommand(1);

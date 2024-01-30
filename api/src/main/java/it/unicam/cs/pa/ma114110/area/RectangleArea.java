@@ -2,12 +2,12 @@ package it.unicam.cs.pa.ma114110.area;
 
 import it.unicam.cs.pa.ma114110.space.Coords;
 
-public class SquaredArea extends Area {
+public class RectangleArea extends Area {
     private final Coords start;
     private final double height;
     private final double width;
 
-    public SquaredArea(String label, Coords start, double height, double width) {
+    public RectangleArea(String label, Coords start, double height, double width) {
         super(label);
 
         if (start == null) {

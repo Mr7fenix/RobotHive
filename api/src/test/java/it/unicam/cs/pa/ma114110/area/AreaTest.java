@@ -9,7 +9,7 @@ class AreaTest {
 
     @Test
     void getLabel() {
-        Area area = new SquaredArea("Ciao", new Coords(0, 0), 1, 1);
+        Area area = new RectangleArea("Ciao", new Coords(0, 0), 1, 1);
         assertEquals("Ciao", area.getLabel());
     }
 }

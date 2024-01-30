@@ -1,6 +1,6 @@
 package it.unicam.cs.pa.ma114110.space;
 
-import it.unicam.cs.pa.ma114110.area.SquaredArea;
+import it.unicam.cs.pa.ma114110.area.RectangleArea;
 import it.unicam.cs.pa.ma114110.robot.Robot;
 import org.junit.jupiter.api.Test;
 
@@ -46,7 +46,7 @@ class SpaceTest {
     void addArea() {
         Environment environment = new Environment();
         assertThrowsExactly(IllegalArgumentException.class, () -> environment.addArea(null));
-        environment.addArea(new SquaredArea("Ciao", new Coords(0, 0), 1, 1));
+        environment.addArea(new RectangleArea("Ciao", new Coords(0, 0), 1, 1));
         assertEquals(1, environment.getAreas().size());
     }
 }
