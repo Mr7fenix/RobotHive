@@ -7,8 +7,10 @@ import it.unicam.cs.pa.ma114110.command.iteration.RepeatCommand;
 import it.unicam.cs.pa.ma114110.command.iteration.UntilCommand;
 import it.unicam.cs.pa.ma114110.command.move.FollowCommand;
 import it.unicam.cs.pa.ma114110.command.move.MoveCommand;
+import it.unicam.cs.pa.ma114110.command.move.MoveRandomCommand;
 import it.unicam.cs.pa.ma114110.command.signal.SignalCommand;
 import it.unicam.cs.pa.ma114110.command.signal.UnSignalCommand;
+import it.unicam.cs.pa.ma114110.space.Coords;
 import it.unicam.cs.pa.ma114110.space.Direction;
 
 import java.io.File;
@@ -35,7 +37,12 @@ public class CommandParser extends Parser {
                     commands.add(parseIterationCommand(line, scanner));
 
                 } else commands.add(parseSampleCommand(line));
+
+                if (!scanner.hasNextLine() && !line.equals("STOP")) {
+                    throw new RuntimeException("Program not closed");
+                }
             }
+
 
             scanner.close();
             return commands;
@@ -135,14 +142,14 @@ public class CommandParser extends Parser {
     }
 
     private SampleCommand parseMoveCommandRandom(String[] tokens) {
-        if (tokens.length != 3) {
+        if (tokens.length != 7) {
             throw new RuntimeException(STR."\{Arrays.toString(tokens)} is not a valid MOVE command");
         }
 
-        return new MoveCommand(
-                new Direction(Double.parseDouble(tokens[1]), Double.parseDouble(tokens[2])),
-                Math.random()
-        );
+        return new MoveRandomCommand(
+                new Coords(Double.parseDouble(tokens[2]), Double.parseDouble(tokens[3])),
+                new Coords(Double.parseDouble(tokens[4]), Double.parseDouble(tokens[5])),
+                Double.parseDouble(tokens[6]));
     }
 
     private SampleCommand parseFollowCommand(String[] tokens) {
