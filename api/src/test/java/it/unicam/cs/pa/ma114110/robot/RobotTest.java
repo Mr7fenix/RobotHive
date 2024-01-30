@@ -193,7 +193,6 @@ class RobotTest {
     }
 
     private LinkedList<SampleCommand> getIterationConfig (){
-        Environment environment = new Environment();
         LinkedList<SampleCommand> commandList = new LinkedList<>();
 
         commandList.add(new MoveCommand(new Direction(0, 1), 1));

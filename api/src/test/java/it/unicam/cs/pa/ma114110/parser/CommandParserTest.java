@@ -1,12 +1,12 @@
 package it.unicam.cs.pa.ma114110.parser;
 
+import it.unicam.cs.pa.ma114110.command.ContinueCommand;
 import it.unicam.cs.pa.ma114110.command.move.FollowCommand;
 import it.unicam.cs.pa.ma114110.command.move.MoveCommand;
 import it.unicam.cs.pa.ma114110.command.move.MoveRandomCommand;
 import it.unicam.cs.pa.ma114110.command.program.Program;
 import it.unicam.cs.pa.ma114110.command.signal.SignalCommand;
 import it.unicam.cs.pa.ma114110.command.signal.UnSignalCommand;
-import it.unicam.cs.pa.ma114110.space.Direction;
 import it.unicam.cs.pa.ma114110.space.Environment;
 import org.junit.jupiter.api.Test;
 
@@ -77,5 +77,16 @@ class CommandParserTest {
         program.setCommandList(parser.parse("../api/src/test/resources/parserTest/test_FOLLOW"));
 
         assertInstanceOf(FollowCommand.class, program.getCommandList().getFirst());
+    }
+
+    @Test
+    void parseContinue() {
+        CommandParser parser = new CommandParser();
+        Environment environment = new Environment();
+
+        Program program = new Program(environment);
+        program.setCommandList(parser.parse("../api/src/test/resources/parserTest/test_CONTINUE"));
+
+        assertInstanceOf(ContinueCommand.class, program.getCommandList().getFirst());
     }
 }
