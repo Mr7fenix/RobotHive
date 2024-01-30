@@ -1,0 +1,32 @@
+group = "it.unicam.cs.pa.ma114110"
+version '1.0-SNAPSHOT'
+
+subprojects {
+    apply plugin: 'java'
+
+    repositories {
+        mavenCentral()
+    }
+
+    java.sourceCompatibility JavaVersion.VERSION_21
+    java.targetCompatibility JavaVersion.VERSION_21
+
+    dependencies {
+        testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+        testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+    }
+
+    tasks.withType(JavaCompile).each {
+        it.options.compilerArgs.add('--enable-preview')
+    }
+
+    tasks.withType(JavaExec) {
+        jvmArgs('--enable-preview')
+        standardInput = System.in // make sure that stdin is used when running gradle tasks
+    }
+
+    test {
+        useJUnitPlatform()
+        jvmArgs("--enable-preview")
+    }
+}
