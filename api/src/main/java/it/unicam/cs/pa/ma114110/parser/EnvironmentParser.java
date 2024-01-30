@@ -10,6 +10,11 @@ import java.io.File;
 import java.util.Scanner;
 
 public class EnvironmentParser extends Parser {
+    /**
+     * Parse the file at the given path and return the corresponding environment
+     * @param path the path of the file to parse
+     * @return the parsed environment
+     */
     public Environment parse(String path) {
         try {
             File file = new File(path);
@@ -28,6 +33,11 @@ public class EnvironmentParser extends Parser {
         }
     }
 
+    /**
+     * Parse a line of the file and return the corresponding area
+     * @param line the line to parse
+     * @return the parsed area
+     */
     private Area parseArea(String line){
         String[] tokens = line.split(" ");
         return switch (tokens[1]){
@@ -37,6 +47,11 @@ public class EnvironmentParser extends Parser {
         };
     }
 
+    /**
+     * Parse a line of the file and return the corresponding rectangle area
+     * @param tokens the tokens of the line
+     * @return the parsed rectangle area
+     */
     private Area parseRectangle(String[] tokens) {
         if (tokens.length != 6) {
             throw new RuntimeException("Invalid number of arguments");
@@ -50,6 +65,11 @@ public class EnvironmentParser extends Parser {
         );
     }
 
+    /**
+     * Parse a line of the file and return the corresponding circular area
+     * @param tokens the tokens of the line
+     * @return the parsed circular area
+     */
     private Area parseCircle(String[] tokens) {
         if (tokens.length != 5) {
             throw new RuntimeException("Invalid number of arguments");
