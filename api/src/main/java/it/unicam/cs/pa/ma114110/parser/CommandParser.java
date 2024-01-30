@@ -20,9 +20,13 @@ import java.util.Objects;
 import java.util.Scanner;
 
 public class CommandParser extends Parser {
-    public CommandParser() {
-    }
 
+    /**
+     * Parse a program from a file
+     *
+     * @param path the path of the file to parse
+     * @return the program
+     */
     public LinkedList<SampleCommand> parse(String path) {
         try {
             File file = new File(path);
@@ -52,7 +56,12 @@ public class CommandParser extends Parser {
         }
     }
 
-
+    /**
+     * This method is used to check if command is an iteration command
+     *
+     * @param line the line to check
+     * @return the program
+     */
     private boolean isIterationCommand(String line) {
         String[] tokens = line.split(" ");
         return switch (tokens[0]) {
@@ -61,6 +70,13 @@ public class CommandParser extends Parser {
         };
     }
 
+    /**
+     * This method is used to parse an iteration command
+     *
+     * @param line the line to parse
+     * @param scanner used for get the iteration program
+     * @return the program
+     */
     private SampleCommand parseIterationCommand(String line, Scanner scanner) {
         LinkedList<SampleCommand> commands = parseIterationProgram(scanner);
 
@@ -73,6 +89,13 @@ public class CommandParser extends Parser {
         };
     }
 
+    /**
+     * This method is used to parse a REPEAT command
+     *
+     * @param tokens the tokens of the command
+     * @param commands list of commands to repeat
+     * @return the program
+     */
     private SampleCommand parseRepeatCommand(String[] tokens, LinkedList<SampleCommand> commands) {
         if (tokens.length != 2) {
             throw new RuntimeException(STR."\{Arrays.toString(tokens)} is not a valid REPEAT command");
@@ -84,6 +107,13 @@ public class CommandParser extends Parser {
         );
     }
 
+    /**
+     * This method is used to parse a UNTIL command
+     *
+     * @param tokens the tokens of the command
+     * @param commands list of commands to repeat
+     * @return the program
+     */
     private SampleCommand parseUntilCommand(String[] tokens, LinkedList<SampleCommand> commands) {
         if (tokens.length != 2) {
             throw new RuntimeException(STR."\{Arrays.toString(tokens)} is not a valid UNTIL command");
@@ -95,6 +125,12 @@ public class CommandParser extends Parser {
         );
     }
 
+    /**
+     * This method is used to get command to repeat in iteration
+     *
+     * @param scanner used for get the command to repeat in iteration
+     * @return the list of commands to repeat
+     */
     private LinkedList<SampleCommand> parseIterationProgram(Scanner scanner) {
         LinkedList<SampleCommand> commands = new LinkedList<>();
 
@@ -112,6 +148,12 @@ public class CommandParser extends Parser {
         return commands;
     }
 
+    /**
+     * This method is used to parse a non iteration command
+     *
+     * @param line the line to parse
+     * @return the command
+     */
     private SampleCommand parseSampleCommand(String line) {
         String[] tokens = line.split(" ");
 
@@ -125,6 +167,12 @@ public class CommandParser extends Parser {
         };
     }
 
+    /**
+     * This method is used to parse a MOVE command
+     *
+     * @param tokens the tokens of the command
+     * @return the command
+     */
     private SampleCommand parseMoveCommand(String[] tokens) {
         if (Objects.equals(tokens[1], "RANDOM")) {
             return parseMoveCommandRandom(tokens);
@@ -141,6 +189,12 @@ public class CommandParser extends Parser {
         );
     }
 
+    /**
+     * This method is used to parse a MOVE RANDOM command
+     *
+     * @param tokens the tokens of the command
+     * @return the command
+     */
     private SampleCommand parseMoveCommandRandom(String[] tokens) {
         if (tokens.length != 7) {
             throw new RuntimeException(STR."\{Arrays.toString(tokens)} is not a valid MOVE command");
@@ -152,6 +206,12 @@ public class CommandParser extends Parser {
                 Double.parseDouble(tokens[6]));
     }
 
+    /**
+     * This method is used to parse a FOLLOW command
+     *
+     * @param tokens the tokens of the command
+     * @return the command
+     */
     private SampleCommand parseFollowCommand(String[] tokens) {
         if (tokens.length != 4) {
             throw new RuntimeException(STR."\{Arrays.toString(tokens)} is not a valid FOLLOW command");
@@ -164,6 +224,12 @@ public class CommandParser extends Parser {
         );
     }
 
+    /**
+     * This method is used to parse a SIGNAL command
+     *
+     * @param tokens the tokens of the command
+     * @return the command
+     */
     private SampleCommand parseSignalCommand(String[] tokens) {
         if (tokens.length != 2) {
             throw new RuntimeException(STR."\{Arrays.toString(tokens)} is not a valid SIGNAL command");
@@ -174,6 +240,12 @@ public class CommandParser extends Parser {
         );
     }
 
+    /**
+     * This method is used to parse a UNSIGNAL command
+     *
+     * @param tokens the tokens of the command
+     * @return the command
+     */
     private SampleCommand parseUnsignalCommand(String[] tokens) {
         if (tokens.length != 2) {
             throw new RuntimeException(STR."\{Arrays.toString(tokens)} is not a valid UNSIGNAL command");
