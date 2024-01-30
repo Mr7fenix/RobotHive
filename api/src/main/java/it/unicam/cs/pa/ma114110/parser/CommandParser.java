@@ -1,5 +1,6 @@
 package it.unicam.cs.pa.ma114110.parser;
 
+import it.unicam.cs.pa.ma114110.command.ContinueCommand;
 import it.unicam.cs.pa.ma114110.command.SampleCommand;
 import it.unicam.cs.pa.ma114110.command.StopCommand;
 import it.unicam.cs.pa.ma114110.command.iteration.ForeverCommand;
@@ -162,6 +163,7 @@ public class CommandParser extends Parser {
             case "FOLLOW" -> parseFollowCommand(tokens);
             case "SIGNAL" -> parseSignalCommand(tokens);
             case "UNSIGNAL" -> parseUnsignalCommand(tokens);
+            case "CONTINUE" -> parseContinueCommand(tokens);
             case "STOP" -> new StopCommand();
             default -> throw new RuntimeException(STR."\{line} is not a valid command");
         };
@@ -253,6 +255,16 @@ public class CommandParser extends Parser {
 
         return new UnSignalCommand(
                 tokens[1]
+        );
+    }
+
+    private SampleCommand parseContinueCommand(String[] tokens) {
+        if (tokens.length != 2) {
+            throw new RuntimeException(STR."\{Arrays.toString(tokens)} is not a valid CONTINUE command");
+        }
+
+        return new ContinueCommand(
+                Integer.parseInt(tokens[1])
         );
     }
 }

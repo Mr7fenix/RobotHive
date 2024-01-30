@@ -60,6 +60,15 @@ public class Program implements ProgramInterface {
         commandList.set(commandList.size() - 1, command);
     }
 
+    public void addFirst(SampleCommand command) {
+        if (command == null) {
+            throw new NullPointerException("Command cannot be null");
+        }
+
+        commandList.addFirst(command);
+    }
+
+
     @Override
     public void setCommandList(LinkedList<SampleCommand> commandList) {
         if (commandList == null) {

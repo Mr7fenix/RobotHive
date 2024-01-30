@@ -147,7 +147,7 @@ class RobotTest {
         Program program = new Program(environment);
 
         program.addCommand(new MoveCommand(new Direction(1, 1), 1));
-        program.addCommand(new ContinueCommand());
+        program.addCommand(new ContinueCommand(1));
         Robot robot = new Robot(new Coords(1, 1));
         robot.addProgram(program);
         robot.executeNextCommand(1);

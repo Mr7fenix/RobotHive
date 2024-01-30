@@ -67,11 +67,8 @@ public class Robot implements RobotInterface {
         SampleCommand command = this.program.getNextCommand();
 
         if (command instanceof ContinueCommand) {
-            if (lastCommand == null) {
-                return;
-            }
+            continueCommand((ContinueCommand) command, dt);
 
-            command = lastCommand;
         } else this.lastCommand = command;
 
         commandSorter(command, dt);
@@ -240,9 +237,9 @@ public class Robot implements RobotInterface {
             case UnSignalCommand cmd -> unSignal(cmd);
             case SignalCommand cmd -> signal(cmd);
             case FollowCommand cmd -> follow(cmd, dt);
-            case StopCommand cmd -> stop();
+            case StopCommand _ -> stop();
             case IterationCommand cmd -> iterationCommandSorter(cmd, dt);
-            default -> throw new IllegalStateException("Unexpected value: " + command);
+            default -> throw new IllegalStateException(STR."Unexpected value: \{command}");
         }
     }
 
@@ -258,7 +255,7 @@ public class Robot implements RobotInterface {
             case RepeatCommand cmd -> repeat(cmd, dt);
             case UntilCommand cmd -> until(cmd, dt);
             case ForeverCommand cmd -> doForever(cmd, dt);
-            default -> throw new IllegalStateException("Unexpected value: " + command);
+            default -> throw new IllegalStateException(STR."Unexpected value: \{command}");
         }
     }
 
@@ -307,6 +304,24 @@ public class Robot implements RobotInterface {
 
         for (SampleCommand command : cmd.getCommandList()) {
             commandSorter(command, dt);
+        }
+
+        executeNextCommand(dt);
+    }
+
+    /**
+     * This method repeat last command for the specific times
+     *
+     * @param cmd iteration command
+     * @param dt  delta time
+     */
+    private void continueCommand(ContinueCommand cmd, Double dt) {
+        if (lastCommand == null) {
+            return;
+        }
+
+        for (int i = 0; i < cmd.getS(); i++) {
+            program.addFirst(lastCommand);
         }
 
         executeNextCommand(dt);
