@@ -85,9 +85,26 @@ public class CommandParser extends Parser {
         return switch (tokens[0]) {
             case "REPEAT" -> parseRepeatCommand(tokens, commands);
             case "UNTIL" -> parseUntilCommand(tokens, commands);
-            case "DO" -> new ForeverCommand(commands);
+            case "DO" -> parseDoCommand(tokens, commands);
             default -> throw new RuntimeException(STR."\{line} is not a valid iteration command");
         };
+    }
+
+    /**
+     * This method is used to parse a DO command
+     *
+     * @param tokens the tokens of the command
+     * @param commands list of commands to repeat
+     * @return the program
+     */
+    private SampleCommand parseDoCommand(String[] tokens, LinkedList<SampleCommand> commands) {
+        if (tokens.length != 2) {
+            throw new RuntimeException(STR."\{Arrays.toString(tokens)} is not a valid DO FOREVER command");
+        }
+
+        return new ForeverCommand(
+                commands
+        );
     }
 
     /**
@@ -137,10 +154,12 @@ public class CommandParser extends Parser {
 
         if (scanner.hasNextLine()) {
             String nextLine = scanner.nextLine();
-            while (nextLine.equals("DONE")) {
+            while (!nextLine.equals("DONE")) {
                 commands.add(parseSampleCommand(nextLine));
                 if (scanner.hasNextLine()) {
                     nextLine = scanner.nextLine();
+
+
                 } else {
                     throw new RuntimeException("Iteration command not closed");
                 }

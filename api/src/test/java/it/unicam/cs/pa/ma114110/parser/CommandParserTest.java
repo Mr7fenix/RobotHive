@@ -89,4 +89,40 @@ class CommandParserTest {
 
         assertInstanceOf(ContinueCommand.class, program.getCommandList().getFirst());
     }
+
+    @Test
+    void parseRepeat() {
+        CommandParser parser = new CommandParser();
+        Environment environment = new Environment();
+
+        Program program = new Program(environment);
+        program.setCommandList(parser.parse("../api/src/test/resources/parserTest/test_REPEAT"));
+        assertThrows(RuntimeException.class, () -> parser.parse("../api/src/test/resources/parserTest/test_REAPEAT_MissingDone"));
+
+        assertEquals(2, program.getCommandList().size());
+    }
+
+    @Test
+    void parseUntil() {
+        CommandParser parser = new CommandParser();
+        Environment environment = new Environment();
+
+        Program program = new Program(environment);
+        program.setCommandList(parser.parse("../api/src/test/resources/parserTest/test_UNTIL"));
+
+        assertThrows(RuntimeException.class, () -> parser.parse("../api/src/test/resources/parserTest/test_UNTIL_MissingDone"));
+        assertEquals(2, program.getCommandList().size());
+    }
+
+    @Test
+    void parseDoForever() {
+        CommandParser parser = new CommandParser();
+        Environment environment = new Environment();
+
+        Program program = new Program(environment);
+        program.setCommandList(parser.parse("../api/src/test/resources/parserTest/test_FOREVER"));
+
+        assertThrows(RuntimeException.class, () -> parser.parse("../api/src/test/resources/parserTest/test_FOREVER_MissingDone"));
+        assertEquals(2, program.getCommandList().size());
+    }
 }
