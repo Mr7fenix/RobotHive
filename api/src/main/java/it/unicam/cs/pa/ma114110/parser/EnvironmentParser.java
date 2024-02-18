@@ -9,15 +9,13 @@ import it.unicam.cs.pa.ma114110.space.Environment;
 import java.io.File;
 import java.util.Scanner;
 
-public class EnvironmentParser extends Parser {
-    /**
-     * Parse the file at the given path and return the corresponding environment
-     * @param path the path of the file to parse
-     * @return the parsed environment
-     */
+public class EnvironmentParser implements ParserInterface<Environment> {
     public Environment parse(String path) {
+            return parse(new File(path));
+    }
+
+    public Environment parse(File file) {
         try {
-            File file = new File(path);
             Scanner scanner = new Scanner(file);
             Environment environment = new Environment();
 

@@ -7,10 +7,10 @@ public interface CoordsInterface {
     /**
      * @return the x coordinate for the specifico cell
      */
-    double getX();
+    double x();
 
     /**
      * @return the y coordinate for the specifico cell
      */
-    double getY();
+    double y();
 }

@@ -23,7 +23,7 @@ public interface RobotInterface {
      *
      * @return the coords of the robot
      */
-    Coords getCoords();
+    CoordsInterface getCoords();
 
     /**
      * This executes the command in stack
@@ -50,6 +50,11 @@ public interface RobotInterface {
      * This method is used to get Program of the robot
      * @return program of the robot
      */
-    Program getProgram();
+    ProgramInterface getProgram();
 
+    /**
+     * This method is used to get the id of the robot
+     * @return id of the robot
+     */
+    int getId();
 }

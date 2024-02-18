@@ -1,5 +1,7 @@
 package it.unicam.cs.pa.ma114110.robot;
 
+import it.unicam.cs.pa.ma114110.area.Area;
+import it.unicam.cs.pa.ma114110.command.CommandInterface;
 import it.unicam.cs.pa.ma114110.command.ContinueCommand;
 import it.unicam.cs.pa.ma114110.command.SampleCommand;
 import it.unicam.cs.pa.ma114110.command.StopCommand;
@@ -10,40 +12,37 @@ import it.unicam.cs.pa.ma114110.command.iteration.UntilCommand;
 import it.unicam.cs.pa.ma114110.command.move.FollowCommand;
 import it.unicam.cs.pa.ma114110.command.move.MoveCommand;
 import it.unicam.cs.pa.ma114110.command.move.MoveRandomCommand;
-import it.unicam.cs.pa.ma114110.command.program.Program;
-import it.unicam.cs.pa.ma114110.command.signal.SignalCommand;
-import it.unicam.cs.pa.ma114110.command.signal.UnSignalCommand;
+import it.unicam.cs.pa.ma114110.command.program.ProgramInterface;
+import it.unicam.cs.pa.ma114110.command.signal.SignalingCommand;
 import it.unicam.cs.pa.ma114110.space.Coords;
 import it.unicam.cs.pa.ma114110.space.Direction;
 import it.unicam.cs.pa.ma114110.space.Environment;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Objects;
 
 public class Robot implements RobotInterface {
-
-    //Coords of the robot
-    private Coords coords;
-
-    //Condition of the robot (STOP or MOVE)
+    private CoordsInterface coords;
     private Condition condition;
-
-    //Stack of commands
-    private Program program;
-
-    //Last Saved Command
-    private SampleCommand lastCommand;
-
-    //Signal of the robot
+    private ProgramInterface program;
+    private CommandInterface lastCommand;
     private String signal;
+    private final int id;
 
 
-    public Robot(Coords coords) {
+    public Robot(Coords coords, int id) {
         this.condition = Condition.STOP;
 
         if (coords == null) {
             throw new IllegalArgumentException("Coords cannot be null");
         }
 
+        if (id < 0) {
+            throw new IllegalArgumentException("Id cannot be negative");
+        }
+
+        this.id = id;
         this.coords = coords;
 
     }
@@ -54,7 +53,7 @@ public class Robot implements RobotInterface {
     }
 
     @Override
-    public Coords getCoords() {
+    public CoordsInterface getCoords() {
         return this.coords;
     }
 
@@ -64,7 +63,7 @@ public class Robot implements RobotInterface {
             return;
         }
 
-        SampleCommand command = this.program.getNextCommand();
+        CommandInterface command = this.program.getNextCommand();
 
         if (command instanceof ContinueCommand) {
             continueCommand((ContinueCommand) command, dt);
@@ -89,8 +88,13 @@ public class Robot implements RobotInterface {
     }
 
     @Override
-    public Program getProgram() {
+    public ProgramInterface getProgram() {
         return this.program;
+    }
+
+    @Override
+    public int getId() {
+        return this.id;
     }
 
     /**
@@ -99,14 +103,9 @@ public class Robot implements RobotInterface {
      * @param coords to normalize in direction
      * @return Direction direction
      */
-    private Direction normalizeCoords(Coords coords) {
-        double magnitude = Math.sqrt(Math.pow(coords.getX(), 2) + Math.pow(coords.getY(), 2));
-
-        if (magnitude == 0) {
-            throw new IllegalArgumentException("coords must be different from (0, 0)");
-        }
-
-        return new Direction((coords.getX() / magnitude), (coords.getY() / magnitude));
+    private Direction normalizeCoords(CoordsInterface coords) {
+        double theta = Math.atan2(coords.y() - this.coords.y(), coords.x() - this.coords.x());
+        return new Direction(Math.cos(theta), Math.sin(theta));
     }
 
     /**
@@ -121,10 +120,10 @@ public class Robot implements RobotInterface {
         }
 
         //Calculate movement distance
-        double distance = dt * command.getS();
+        double distance = dt * command.s();
 
-        double x = (coords.getX() + (command.getDirection().getX() * distance));
-        double y = (coords.getY() + (command.getDirection().getY() * distance));
+        double x = (coords.x() + (command.direction().getX() * distance));
+        double y = (coords.y() + (command.direction().getY() * distance));
 
         this.coords = new Coords(x, y);
     }
@@ -140,26 +139,21 @@ public class Robot implements RobotInterface {
         double randomX = (int) ((Math.random() * (command.getSecondPoint().getX() - command.getFirstPoint().getX())) + command.getFirstPoint().getX());
         double randomY = (int) ((Math.random() * (command.getSecondPoint().getY() - command.getFirstPoint().getY())) + command.getFirstPoint().getY());
 
-        moveToSpecificDirection(new MoveCommand(normalizeCoords(new Coords(randomX, randomY)), command.getS()), dt);
+        moveToSpecificDirection(new MoveCommand(normalizeCoords(new Coords(randomX, randomY)), command.s()), dt);
     }
 
     /**
-     * This method set the signal of the robot
+     * This method set the signal of the robot or unsignal it
      *
      * @param command to set
      */
-    private void signal(SignalCommand command) {
-        this.signal = command.getLabel();
-    }
-
-    /**
-     * This method unset the signal of the robot
-     *
-     * @param command to unset
-     */
-    private void unSignal(UnSignalCommand command) {
-        if (Objects.equals(this.signal, command.getLabel())) {
-            this.signal = null;
+    private void signaling(SignalingCommand command) {
+        if (command.signal()){
+            this.signal = command.label();
+        }else {
+            if (Objects.equals(this.signal, command.label())) {
+                this.signal = null;
+            }
         }
     }
 
@@ -169,50 +163,44 @@ public class Robot implements RobotInterface {
      * @param command to move
      * @param dt      delta time
      */
-    private void follow(FollowCommand command, Double dt) {
-        Robot followRobot = getMostCloseRobot(command.getDistance());
-        double x = 0;
-        double y = 0;
+    private void follow(FollowCommand command, double dt) {
+        List<RobotInterface> followersList = new LinkedList<>();
 
-        //If there is no robot ad the distance, robot move to the random direction between -distance and distance
-        if (followRobot == null) {
-            x = ((Math.random() * (command.getDistance() - (-command.getDistance()))) + (-command.getDistance()));
-            y = ((Math.random() * (command.getDistance() - (-command.getDistance()))) + (-command.getDistance()));
+        for (RobotInterface robot : program.getSpace().getRobots()) {
+            if (Objects.equals(robot.getSignal(), command.label())){
+                if (Math.sqrt(Math.pow(robot.getCoords().x() - coords.x(), 2) + Math.pow(robot.getCoords().x() - coords.y(), 2)) < command.distance()){
+                    followersList.add(robot);
+                }
+            }
         }
 
-        //Robot move to the middle of the two robots
-        if (followRobot != null) {
-            x = ((coords.getX() + followRobot.getCoords().getX()) / 2);
-            y = ((coords.getY() + followRobot.getCoords().getY()) / 2);
-
+        if (followersList.isEmpty()) {
+            CoordsInterface randomCoords = new Coords(-command.distance(), command.distance());
+            moveToRandomDirection(new MoveRandomCommand(randomCoords, randomCoords, command.s()), dt);
+        } else {
+            CoordsInterface midCoords = getMidPoint(followersList);
+            System.out.println(midCoords.x());
+            System.out.println(midCoords.y());
+            moveToSpecificDirection(new MoveCommand(normalizeCoords(midCoords), command.s()), dt);
         }
-
-        moveToSpecificDirection(new MoveCommand(normalizeCoords(new Coords(x, y)), command.getS()), dt);
     }
 
     /**
      * This method returns the most close robot to the robot
      *
-     * @param distance max distance to search
+     * @param robots robots in specific distance
      * @return the most close robot
      */
-    private Robot getMostCloseRobot(double distance) {
-        double maxX = coords.getX() + distance;
-        double maxY = coords.getY() + distance;
+    private CoordsInterface getMidPoint(List<RobotInterface> robots) {
+        double x = 0;
+        double y = 0;
 
-        Robot followRobot = null;
-
-        for (Robot robot : program.getSpace().getRobots()) {
-            if (followRobot == null) {
-                if (robot.getCoords().getX() <= maxX && robot.getCoords().getY() <= maxY && robot != this) {
-                    followRobot = robot;
-                }
-            } else if (robot.getCoords().getX() <= followRobot.getCoords().getX() || robot.getCoords().getY() <= followRobot.getCoords().getY()) {
-                followRobot = robot;
-            }
+        for (RobotInterface robot : robots) {
+            x += robot.getCoords().x();
+            y += robot.getCoords().y();
         }
 
-        return followRobot;
+        return new Coords(x / robots.size(), y / robots.size());
     }
 
     /**
@@ -234,8 +222,7 @@ public class Robot implements RobotInterface {
         switch (command) {
             case MoveRandomCommand cmd -> moveToRandomDirection(cmd, dt);
             case MoveCommand cmd -> moveToSpecificDirection(cmd, dt);
-            case UnSignalCommand cmd -> unSignal(cmd);
-            case SignalCommand cmd -> signal(cmd);
+            case SignalingCommand cmd -> signaling(cmd);
             case FollowCommand cmd -> follow(cmd, dt);
             case StopCommand _ -> stop();
             case IterationCommand cmd -> iterationCommandSorter(cmd, dt);
@@ -266,7 +253,7 @@ public class Robot implements RobotInterface {
      * @param dt  delta time
      */
 
-    private void repeat(RepeatCommand cmd, Double dt) {
+    private void repeat(RepeatCommand cmd, double dt) {
         for (int i = 0; i < cmd.getTimes(); i++) {
             for (SampleCommand command : cmd.getCommandList()) {
                 commandSorter(command, dt);
@@ -280,17 +267,21 @@ public class Robot implements RobotInterface {
      * @param cmd iteration command
      * @param dt  delta time
      */
-    private void until(UntilCommand cmd, Double dt) {
-        Environment environment = program.getSpace();
-        environment.getAreas().forEach(area -> {
-            if (area.getLabel().equals(cmd.getLabel())) {
-                if (!area.contains(coords)) {
-                    for (SampleCommand command : cmd.getCommandList()) {
-                        commandSorter(command, dt);
-                    }
+    private void until(UntilCommand cmd, double dt) {
+        EnvironmentInterface environment = program.getSpace();
+
+        List<Area> areas = environment.getAreas().stream().filter(area -> area.getLabel().equals(cmd.getLabel())).toList();
+        if (!areas.isEmpty()) {
+            if (areas.stream().noneMatch(area -> area.contains(coords))) {
+                program.addFirst(cmd);
+
+                for (CommandInterface command : cmd.getCommandList().reversed()) {
+                    program.addFirst(command);
                 }
+
+                executeNextCommand(dt);
             }
-        });
+        }
     }
 
     /**
@@ -299,11 +290,11 @@ public class Robot implements RobotInterface {
      * @param cmd iteration command
      * @param dt  delta time
      */
-    private void doForever(ForeverCommand cmd, Double dt) {
-        program.addCommand(cmd);
+    private void doForever(ForeverCommand cmd, double dt) {
+        program.addFirst(cmd);
 
-        for (SampleCommand command : cmd.getCommandList()) {
-            commandSorter(command, dt);
+        for (CommandInterface command : cmd.getCommandList().reversed()) {
+            program.addFirst(command);
         }
 
         executeNextCommand(dt);
@@ -315,7 +306,7 @@ public class Robot implements RobotInterface {
      * @param cmd iteration command
      * @param dt  delta time
      */
-    private void continueCommand(ContinueCommand cmd, Double dt) {
+    private void continueCommand(ContinueCommand cmd, double dt) {
         if (lastCommand == null) {
             return;
         }

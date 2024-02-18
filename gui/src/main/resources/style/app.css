@@ -1,0 +1,10 @@
+.main-menu-button{
+    -fx-font-size: 14;
+    -fx-font-weight: bold;
+    -fx-padding: 5px;
+}
+
+.right-side-bar{
+    -fx-background-color: #c9c8c8;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);
+}

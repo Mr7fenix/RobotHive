@@ -11,22 +11,22 @@ class SpaceTest {
     @Test
     void addRobot() {
         Environment environment = new Environment();
-        assertThrowsExactly(IllegalArgumentException.class, () -> environment.addRobot(null));
-        environment.addRobot(new Robot(new Coords(0, 0)));
+        assertThrowsExactly(IllegalArgumentException.class, () -> environment.addRobot((Robot) null));
+        environment.addRobot(new Robot(new Coords(0, 0), 1));
         assertEquals(1, environment.getRobots().size());
     }
 
     @Test
     void getRobots() {
         Environment environment = new Environment();
-        environment.addRobot(new Robot(new Coords(0, 0)));
+        environment.addRobot(new Robot(new Coords(0, 0), 1));
         assertEquals(1, environment.getRobots().size());
     }
 
     @Test
     void getRobotByCoords() {
         Environment environment = new Environment();
-        Robot robot = new Robot(new Coords(0, 0));
+        Robot robot = new Robot(new Coords(0, 0), 1);
         environment.addRobot(robot);
         assertEquals(robot, environment.getRobotByCoords(new Coords(0, 0)));
     }
@@ -34,7 +34,7 @@ class SpaceTest {
     @Test
     void removeRobot() {
         Environment environment = new Environment();
-        Robot robot = new Robot(new Coords(0, 0));
+        Robot robot = new Robot(new Coords(0, 0), 1);
         environment.addRobot(robot);
         environment.removeRobot(robot);
         assertEquals(0, environment.getRobots().size());

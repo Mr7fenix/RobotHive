@@ -1,44 +1,21 @@
 package it.unicam.cs.pa.ma114110.command.move;
 
-import it.unicam.cs.pa.ma114110.command.SampleCommand;
-import it.unicam.cs.pa.ma114110.space.Coords;
+import it.unicam.cs.pa.ma114110.command.CommandInterface;
+import it.unicam.cs.pa.ma114110.space.CoordsInterface;
 
-public class MoveRandomCommand extends SampleCommand {
-    private final Coords firstPoint;
-    private final Coords secondPoint;
-
-    private final double s;
-
-
-    public MoveRandomCommand(Coords firstPoint, Coords secondPointPoint, double s) {
-        super();
+public record MoveRandomCommand(CoordsInterface firstPoint, CoordsInterface secondPoint, double s) implements CommandInterface {
+    public MoveRandomCommand {
 
         if (firstPoint == null) {
             throw new IllegalArgumentException("First point cannot be null");
         }
 
-        if (secondPointPoint == null) {
+        if (secondPoint == null) {
             throw new IllegalArgumentException("Second point cannot be null");
         }
 
         if (s <= 0) {
             throw new IllegalArgumentException("s must be greater than 0");
         }
-
-        this.firstPoint = firstPoint;
-        this.secondPoint = secondPointPoint;
-        this.s = s;
-    }
-
-    public Coords getFirstPoint() {
-        return firstPoint;
-    }
-
-    public Coords getSecondPoint() {
-        return secondPoint;
-    }
-
-    public double getS() {
-        return s;
     }
 }

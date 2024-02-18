@@ -1,6 +1,7 @@
 package it.unicam.cs.pa.ma114110.area;
 
 import it.unicam.cs.pa.ma114110.space.Coords;
+import it.unicam.cs.pa.ma114110.space.CoordsInterface;
 
 public class RectangleArea extends Area {
     private final Coords start;
@@ -32,13 +33,13 @@ public class RectangleArea extends Area {
     }
 
     @Override
-    public boolean contains(Coords coords) {
+    public boolean contains(CoordsInterface coords) {
         if (coords == null) {
             throw new NullPointerException("Coords cannot be null");
         }
 
-        return coords.getX() >= start.getX() && coords.getX() <= start.getX() + width
-                && coords.getY() >= start.getY() && coords.getY() <= start.getY() + height;
+        return coords.x() >= start.x() && coords.x() <= start.x() + width
+                && coords.y() >= start.y() && coords.y() <= start.y() + height;
     }
 
     public double getWidth() {

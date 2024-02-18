@@ -45,6 +45,16 @@ public class Environment implements EnvironmentInterface {
     }
 
     @Override
+    public void genRobots() {
+        int range = 1600 - 5 + 1;
+        for (int i = 0; i < 10; i++) {
+            double x = (Math.random() * range) + 5;
+            double y = (Math.random() * range) + 5;
+            this.addRobot(new Robot(new Coords(x, y), getNewId()));
+        }
+    }
+
+    @Override
     public List<Robot> getRobots() {
         return this.robotList;
     }
@@ -56,7 +66,7 @@ public class Environment implements EnvironmentInterface {
         }
 
         for (Robot robot : robotList) {
-            if (Objects.equals(robot.getCoords().getX(), coords.getX()) && Objects.equals(robot.getCoords().getY(), coords.getY())) {
+            if (Objects.equals(robot.getCoords().x(), coords.x()) && Objects.equals(robot.getCoords().y(), coords.y())) {
                 return robot;
             }
         }
@@ -66,5 +76,23 @@ public class Environment implements EnvironmentInterface {
     @Override
     public List<Area> getAreas() {
         return this.areaList;
+    }
+
+    @Override
+    public Robot getRobotById(int id) {
+        for (Robot robot : robotList) {
+            if (robot.getId() == id) {
+                return robot;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * This method is used to get a new id for a robot
+     * @return new id
+     */
+    public int getNewId() {
+        return robotList.size() + 1;
     }
 }

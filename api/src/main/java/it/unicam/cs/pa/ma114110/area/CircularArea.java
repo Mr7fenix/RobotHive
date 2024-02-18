@@ -1,6 +1,7 @@
 package it.unicam.cs.pa.ma114110.area;
 
 import it.unicam.cs.pa.ma114110.space.Coords;
+import it.unicam.cs.pa.ma114110.space.CoordsInterface;
 
 public class CircularArea extends Area {
     private final double radius;
@@ -30,8 +31,8 @@ public class CircularArea extends Area {
     }
 
     @Override
-    public boolean contains(Coords coords) {
-        double distance = Math.sqrt(Math.pow(coords.getX() - center.getX(), 2) + Math.pow(coords.getY() - center.getY(), 2));
+    public boolean contains(CoordsInterface coords) {
+        double distance = Math.sqrt(Math.pow(coords.x() - center.x(), 2) + Math.pow(coords.y() - center.y(), 2));
         return distance <= radius;
     }
 }

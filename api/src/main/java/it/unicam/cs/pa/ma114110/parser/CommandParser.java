@@ -9,8 +9,7 @@ import it.unicam.cs.pa.ma114110.command.iteration.UntilCommand;
 import it.unicam.cs.pa.ma114110.command.move.FollowCommand;
 import it.unicam.cs.pa.ma114110.command.move.MoveCommand;
 import it.unicam.cs.pa.ma114110.command.move.MoveRandomCommand;
-import it.unicam.cs.pa.ma114110.command.signal.SignalCommand;
-import it.unicam.cs.pa.ma114110.command.signal.UnSignalCommand;
+import it.unicam.cs.pa.ma114110.command.signal.SignalingCommand;
 import it.unicam.cs.pa.ma114110.space.Coords;
 import it.unicam.cs.pa.ma114110.space.Direction;
 
@@ -20,7 +19,7 @@ import java.util.LinkedList;
 import java.util.Objects;
 import java.util.Scanner;
 
-public class CommandParser extends Parser {
+public class CommandParser implements ParserInterface<LinkedList<CommandInterface>> {
 
     /**
      * Parse a program from a file
@@ -28,9 +27,13 @@ public class CommandParser extends Parser {
      * @param path the path of the file to parse
      * @return the program
      */
-    public LinkedList<SampleCommand> parse(String path) {
+    public LinkedList<CommandInterface> parse(String path) {
+        return parse(new File(path));
+    }
+
+    @Override
+    public LinkedList<CommandInterface> parse(File file) {
         try {
-            File file = new File(path);
             Scanner scanner = new Scanner(file);
 
             LinkedList<SampleCommand> commands = new LinkedList<>();
@@ -74,12 +77,12 @@ public class CommandParser extends Parser {
     /**
      * This method is used to parse an iteration command
      *
-     * @param line the line to parse
+     * @param line    the line to parse
      * @param scanner used for get the iteration program
      * @return the program
      */
-    private SampleCommand parseIterationCommand(String line, Scanner scanner) {
-        LinkedList<SampleCommand> commands = parseIterationProgram(scanner);
+    private CommandInterface parseIterationCommand(String line, Scanner scanner) {
+        LinkedList<CommandInterface> commands = parseIterationProgram(scanner);
 
         String[] tokens = line.split(" ");
         return switch (tokens[0]) {
@@ -93,28 +96,26 @@ public class CommandParser extends Parser {
     /**
      * This method is used to parse a DO command
      *
-     * @param tokens the tokens of the command
+     * @param tokens   the tokens of the command
      * @param commands list of commands to repeat
      * @return the program
      */
-    private SampleCommand parseDoCommand(String[] tokens, LinkedList<SampleCommand> commands) {
+    private CommandInterface parseDoCommand(String[] tokens, LinkedList<CommandInterface> commands) {
         if (tokens.length != 2) {
             throw new RuntimeException(STR."\{Arrays.toString(tokens)} is not a valid DO FOREVER command");
         }
 
-        return new ForeverCommand(
-                commands
-        );
+        return new ForeverCommand(commands);
     }
 
     /**
      * This method is used to parse a REPEAT command
      *
-     * @param tokens the tokens of the command
+     * @param tokens   the tokens of the command
      * @param commands list of commands to repeat
      * @return the program
      */
-    private SampleCommand parseRepeatCommand(String[] tokens, LinkedList<SampleCommand> commands) {
+    private CommandInterface parseRepeatCommand(String[] tokens, LinkedList<CommandInterface> commands) {
         if (tokens.length != 2) {
             throw new RuntimeException(STR."\{Arrays.toString(tokens)} is not a valid REPEAT command");
         }
@@ -128,11 +129,11 @@ public class CommandParser extends Parser {
     /**
      * This method is used to parse a UNTIL command
      *
-     * @param tokens the tokens of the command
+     * @param tokens   the tokens of the command
      * @param commands list of commands to repeat
      * @return the program
      */
-    private SampleCommand parseUntilCommand(String[] tokens, LinkedList<SampleCommand> commands) {
+    private CommandInterface parseUntilCommand(String[] tokens, LinkedList<CommandInterface> commands) {
         if (tokens.length != 2) {
             throw new RuntimeException(STR."\{Arrays.toString(tokens)} is not a valid UNTIL command");
         }
@@ -180,8 +181,7 @@ public class CommandParser extends Parser {
         return switch (tokens[0]) {
             case "MOVE" -> parseMoveCommand(tokens);
             case "FOLLOW" -> parseFollowCommand(tokens);
-            case "SIGNAL" -> parseSignalCommand(tokens);
-            case "UNSIGNAL" -> parseUnsignalCommand(tokens);
+            case "SIGNAL", "UNSIGNAL" -> parseSignalingCommand(tokens);
             case "CONTINUE" -> parseContinueCommand(tokens);
             case "STOP" -> new StopCommand();
             default -> throw new RuntimeException(STR."\{line} is not a valid command");
@@ -256,9 +256,17 @@ public class CommandParser extends Parser {
             throw new RuntimeException(STR."\{Arrays.toString(tokens)} is not a valid SIGNAL command");
         }
 
-        return new SignalCommand(
-                tokens[1]
-        );
+        if (tokens[0].equals("SIGNAL")){
+            return new SignalingCommand(
+                    tokens[1],
+                    true
+            );
+        }else {
+            return new SignalingCommand(
+                    tokens[1],
+                    false
+            );
+        }
     }
 
     /**

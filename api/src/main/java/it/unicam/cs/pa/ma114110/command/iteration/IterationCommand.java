@@ -4,8 +4,8 @@ import it.unicam.cs.pa.ma114110.command.SampleCommand;
 
 import java.util.LinkedList;
 
-public abstract class IterationCommand extends SampleCommand {
-    private final LinkedList<SampleCommand> commandList;
+public abstract class IterationCommand implements CommandInterface {
+    private final LinkedList<CommandInterface> commandList;
 
 
     public IterationCommand (LinkedList<SampleCommand> commandList){

@@ -10,8 +10,7 @@ import it.unicam.cs.pa.ma114110.command.move.FollowCommand;
 import it.unicam.cs.pa.ma114110.command.move.MoveCommand;
 import it.unicam.cs.pa.ma114110.command.move.MoveRandomCommand;
 import it.unicam.cs.pa.ma114110.command.program.Program;
-import it.unicam.cs.pa.ma114110.command.signal.SignalCommand;
-import it.unicam.cs.pa.ma114110.command.signal.UnSignalCommand;
+import it.unicam.cs.pa.ma114110.command.signal.SignalingCommand;
 import it.unicam.cs.pa.ma114110.space.Coords;
 import it.unicam.cs.pa.ma114110.space.Direction;
 import it.unicam.cs.pa.ma114110.space.Environment;
@@ -24,14 +23,14 @@ import static org.junit.jupiter.api.Assertions.*;
 class RobotTest {
     @Test
     void getCondition() {
-        Robot robot = new Robot(new Coords(1, 1));
+        Robot robot = new Robot(new Coords(1, 1), 1);
         assertEquals(Condition.STOP, robot.getCondition());
     }
 
     @Test
     void getCoords() {
         Coords coords = new Coords(1, 1);
-        Robot robot = new Robot(coords);
+        Robot robot = new Robot(coords, 1);
         assertEquals(coords, robot.getCoords());
     }
 
@@ -41,11 +40,11 @@ class RobotTest {
         Program program = new Program(environment);
 
         program.addCommand(new MoveCommand(new Direction(1, 1), 1));
-        Robot robot = new Robot(new Coords(1, 1));
+        Robot robot = new Robot(new Coords(1, 1), 1);
         robot.addProgram(program);
         robot.executeNextCommand(1);
-        assertEquals(2, robot.getCoords().getX());
-        assertEquals(2, robot.getCoords().getY());
+        assertEquals(2, robot.getCoords().x());
+        assertEquals(2, robot.getCoords().y());
     }
 
     @Test
@@ -54,11 +53,11 @@ class RobotTest {
         Program program = new Program(environment);
 
         program.addCommand(new MoveCommand(new Direction(1, 1), 1));
-        Robot robot = new Robot(new Coords(1, 1));
+        Robot robot = new Robot(new Coords(1, 1), 1);
         robot.addProgram(program);
         robot.executeNextCommand(1);
-        assertEquals(2, robot.getCoords().getX());
-        assertEquals(2, robot.getCoords().getY());
+        assertEquals(2, robot.getCoords().x());
+        assertEquals(2, robot.getCoords().y());
         assertEquals(Condition.MOVE, robot.getCondition());
     }
 
@@ -68,10 +67,10 @@ class RobotTest {
         Program program = new Program(environment);
 
         program.addCommand(new MoveRandomCommand(new Coords(1, 1), new Coords(2, 2), 1));
-        Robot robot = new Robot(new Coords(1, 1));
+        Robot robot = new Robot(new Coords(1, 1), 1);
         robot.addProgram(program);
         robot.executeNextCommand(1);
-        assertTrue(robot.getCoords().getX() <= 2 && robot.getCoords().getY() <= 2);
+        assertTrue(robot.getCoords().x() <= 2 && robot.getCoords().y() <= 2);
         assertEquals(Condition.MOVE, robot.getCondition());
     }
 
@@ -81,24 +80,24 @@ class RobotTest {
         Program programM = new Program(environment);
         Program programS = new Program(environment);
 
-        programS.addCommand(new SignalCommand("signal"));
+        programS.addCommand(new SignalingCommand("signal", true));
         programM.addCommand(new FollowCommand("signal", 20, 1));
 
-        Robot robot = new Robot(new Coords(0, 1));
+        Robot robot = new Robot(new Coords(0, 1), 1);
         environment.addRobot(robot);
         robot.addProgram(programM);
 
-        assertTrue(robot.getCoords().getX() < 20 && robot.getCoords().getY() < 20);
+        assertTrue(robot.getCoords().x() < 20 && robot.getCoords().y() < 20);
 
-        Robot robot2 = new Robot(new Coords(0, 4));
+        Robot robot2 = new Robot(new Coords(0, 4), 1);
         environment.addRobot(robot2);
         robot2.addProgram(programS);
 
         robot2.executeNextCommand(1);
         robot.executeNextCommand(1);
 
-        assertEquals(0, robot.getCoords().getX());
-        assertEquals(2, robot.getCoords().getY());
+        assertEquals(0, robot.getCoords().x());
+        assertEquals(2, robot.getCoords().y());
         assertEquals(Condition.MOVE, robot.getCondition());
     }
 
@@ -107,8 +106,8 @@ class RobotTest {
         Environment environment = new Environment();
         Program program = new Program(environment);
 
-        program.addCommand(new SignalCommand("signal"));
-        Robot robot = new Robot(new Coords(1, 1));
+        program.addCommand(new SignalingCommand("signal", true));
+        Robot robot = new Robot(new Coords(1, 1), 1);
         robot.addProgram(program);
         robot.executeNextCommand(1);
         assertEquals("signal", robot.getSignal());
@@ -119,9 +118,9 @@ class RobotTest {
         Environment environment = new Environment();
         Program program = new Program(environment);
 
-        program.addCommand(new SignalCommand("signal"));
-        program.addCommand(new UnSignalCommand("signal"));
-        Robot robot = new Robot(new Coords(1, 1));
+        program.addCommand(new SignalingCommand("signal", true));
+        program.addCommand(new SignalingCommand("signal", false));
+        Robot robot = new Robot(new Coords(1, 1), 1);
         robot.addProgram(program);
         robot.executeNextCommand(1);
         robot.executeNextCommand(1);
@@ -135,7 +134,7 @@ class RobotTest {
         Program program = new Program(environment);
 
         program.addCommand(new StopCommand());
-        Robot robot = new Robot(new Coords(1, 1));
+        Robot robot = new Robot(new Coords(1, 1), 1);
         robot.addProgram(program);
         robot.executeNextCommand(1);
         assertEquals(Condition.STOP, robot.getCondition());
@@ -148,12 +147,12 @@ class RobotTest {
 
         program.addCommand(new MoveCommand(new Direction(1, 1), 1));
         program.addCommand(new ContinueCommand(1));
-        Robot robot = new Robot(new Coords(1, 1));
+        Robot robot = new Robot(new Coords(1, 1), 1);
         robot.addProgram(program);
         robot.executeNextCommand(1);
         robot.executeNextCommand(1);
-        assertEquals(3, robot.getCoords().getX());
-        assertEquals(3, robot.getCoords().getY());
+        assertEquals(3, robot.getCoords().x());
+        assertEquals(3, robot.getCoords().y());
         assertEquals(Condition.MOVE, robot.getCondition());
     }
 
@@ -164,7 +163,7 @@ class RobotTest {
 
         program.addCommand(new UntilCommand("signal", getIterationConfig()));
 
-        Robot robot = new Robot(new Coords(1, 1));
+        Robot robot = new Robot(new Coords(1, 1), 1);
 
         environment.addRobot(robot);
         environment.addArea(new RectangleArea("signal", new Coords(1, 6), 1, 1));
@@ -172,8 +171,8 @@ class RobotTest {
         robot.addProgram(program);
         robot.executeNextCommand(1);
 
-        assertEquals(1, robot.getCoords().getX());
-        assertEquals(6, robot.getCoords().getY());
+        assertEquals(1, robot.getCoords().x());
+        assertEquals(6, robot.getCoords().y());
     }
 
     @Test
@@ -183,13 +182,13 @@ class RobotTest {
 
         program.addCommand(new RepeatCommand(5, getIterationConfig()));
 
-        Robot robot = new Robot(new Coords(1, 1));
+        Robot robot = new Robot(new Coords(1, 1), 1);
 
         robot.addProgram(program);
         robot.executeNextCommand(1);
 
-        assertEquals(1, robot.getCoords().getX());
-        assertEquals(26, robot.getCoords().getY());
+        assertEquals(1, robot.getCoords().x());
+        assertEquals(26, robot.getCoords().y());
     }
 
     private LinkedList<SampleCommand> getIterationConfig (){
@@ -209,7 +208,7 @@ class RobotTest {
         Environment environment = new Environment();
         Program program = new Program(environment);
 
-        Robot robot = new Robot(new Coords(1, 1));
+        Robot robot = new Robot(new Coords(1, 1), 1);
         assertThrows(NullPointerException.class, () -> robot.addProgram(null));
 
         program.addCommand(new MoveCommand(new Direction(1, 1), 1));
@@ -222,10 +221,27 @@ class RobotTest {
         Environment environment = new Environment();
         Program program = new Program(environment);
 
-        program.addCommand(new SignalCommand("signal"));
-        Robot robot = new Robot(new Coords(1, 1));
+        program.addCommand(new SignalingCommand("signal", true));
+        Robot robot = new Robot(new Coords(1, 1), 1);
         robot.addProgram(program);
         robot.executeNextCommand(1);
         assertEquals("signal", robot.getSignal());
+    }
+
+    @Test
+    void cose() {
+        Robot robot = new Robot(new Coords(1, 1), 1);
+        Environment environment = new Environment();
+        Program program = new Program(environment);
+
+        program.addCommand(new MoveCommand(new Direction(1, 0), 1));
+        robot.addProgram(program);
+        robot.executeNextCommand(1);
+
+        assertEquals(2, robot.getCoords().x());
+
+        robot.executeNextCommand(1);
+
+        assertEquals(2, robot.getCoords().x());
     }
 }

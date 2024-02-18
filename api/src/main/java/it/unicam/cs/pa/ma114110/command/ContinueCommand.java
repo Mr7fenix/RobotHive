@@ -1,6 +1,6 @@
 package it.unicam.cs.pa.ma114110.command;
 
-public class ContinueCommand extends SampleCommand {
+public class ContinueCommand implements CommandInterface {
     private final int s;
 
     public ContinueCommand(int s) {

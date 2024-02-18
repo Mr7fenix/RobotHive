@@ -31,6 +31,11 @@ public interface EnvironmentInterface {
     void addArea(Area area);
 
     /**
+     * This method is used to generate random robots in random coords on the space
+     */
+    void genRobots();
+
+    /**
      * This method is used to get all robots in the space
      * @return list of all robots
      */
@@ -48,4 +53,10 @@ public interface EnvironmentInterface {
      * @return list of all areas
      */
     List<Area> getAreas();
+
+    /**
+     * This method is used to get robot by id
+     * @return robot whit corresponding id
+     */
+    Robot getRobotById(int id);
 }

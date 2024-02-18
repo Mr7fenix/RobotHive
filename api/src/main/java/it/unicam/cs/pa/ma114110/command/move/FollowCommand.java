@@ -1,13 +1,9 @@
 package it.unicam.cs.pa.ma114110.command.move;
 
-import it.unicam.cs.pa.ma114110.command.SampleCommand;
+import it.unicam.cs.pa.ma114110.command.CommandInterface;
 
-public class FollowCommand extends SampleCommand {
-    private final String label;
-    private final double distance;
-    private final double s;
-
-    public FollowCommand(String label, double distance, double s) {
+public record FollowCommand(String label, double distance, double s) implements CommandInterface {
+    public FollowCommand {
         if (!label.matches("[a-zA-Z_0-9]+")) {
             throw new IllegalArgumentException("Label can contains only alphanumeric character and '_'");
         }
@@ -20,21 +16,5 @@ public class FollowCommand extends SampleCommand {
             throw new IllegalArgumentException("s must be max to 0");
         }
 
-        this.label = label;
-        this.distance = distance;
-        this.s = s;
-    }
-
-
-    public String getLabel() {
-        return label;
-    }
-
-    public double getDistance() {
-        return distance;
-    }
-
-    public double getS() {
-        return s;
     }
 }

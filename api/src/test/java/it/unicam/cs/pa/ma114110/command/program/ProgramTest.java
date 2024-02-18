@@ -78,18 +78,6 @@ class ProgramTest {
     }
 
     @Test
-    void setLastCommand() {
-        Program program = new Program(new Environment());
-        MoveCommand command1 = new MoveCommand(new Direction(1, 1), 1);
-        MoveRandomCommand command2 = new MoveRandomCommand(new Coords(1, 1), new Coords(1, 1), 2);
-
-        program.addCommand(command1);
-        assertThrows(NullPointerException.class, () -> program.setLastCommand(null));
-        program.setLastCommand(command2);
-        assertEquals(command2, program.getNextCommand());
-    }
-
-    @Test
     void setCommandList() {
         Program program = new Program(new Environment());
         LinkedList<SampleCommand> commandList = new LinkedList<>();

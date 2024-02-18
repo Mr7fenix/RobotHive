@@ -9,6 +9,10 @@ javafx {
     modules("javafx.controls", "javafx.fxml")
 }
 
-application{
-    mainClass.set("it.unicam.cs.pa.ma114110.Main")
+application {
+    mainClass.set("it.unicam.cs.pa.ma114110.RobotHiveGUI")
+}
+
+dependencies {
+    implementation(project(":api"))
 }

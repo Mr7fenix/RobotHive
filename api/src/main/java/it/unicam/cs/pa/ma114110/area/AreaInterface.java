@@ -1,6 +1,8 @@
 package it.unicam.cs.pa.ma114110.area;
 
+import it.unicam.cs.pa.ma114110.command.CommandInterface;
 import it.unicam.cs.pa.ma114110.space.Coords;
+import it.unicam.cs.pa.ma114110.space.CoordsInterface;
 
 /**
  * This interface is used to represents an area in space.
@@ -20,5 +22,5 @@ public interface AreaInterface {
      * @param coords the coordinates to check
      * @return true if the given coordinates are inside the area
      */
-    boolean contains(Coords coords);
+    boolean contains(CoordsInterface coords);
 }

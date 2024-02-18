@@ -84,7 +84,7 @@ public class Program implements ProgramInterface {
     }
 
     @Override
-    public Environment getSpace() {
+    public EnvironmentInterface getSpace() {
         return this.environment;
     }
 }

@@ -1,9 +1,10 @@
 package it.unicam.cs.pa.ma114110.command.program;
 
-import it.unicam.cs.pa.ma114110.command.SampleCommand;
+import it.unicam.cs.pa.ma114110.command.CommandInterface;
 import it.unicam.cs.pa.ma114110.space.Environment;
+import it.unicam.cs.pa.ma114110.space.EnvironmentInterface;
 
-import java.util.LinkedList;
+import java.util.Deque;
 
 public interface ProgramInterface {
     LinkedList<SampleCommand> getCommandList();
@@ -67,5 +68,11 @@ public interface ProgramInterface {
      *
      * @return the space of the program is executed
      */
-    Environment getSpace();
+    EnvironmentInterface getSpace();
+
+    /**
+     * this method add command at the first position of the Deque
+     * @param command command to add on the Deque
+     */
+    void addFirst(CommandInterface command);
 }
