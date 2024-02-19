@@ -191,8 +191,8 @@ class SampleRobotTest {
         assertEquals(26, robot.getCoords().y());
     }
 
-    private LinkedList<SampleCommand> getIterationConfig (){
-        LinkedList<SampleCommand> commandList = new LinkedList<>();
+    private LinkedList<Command> getIterationConfig (){
+        LinkedList<Command> commandList = new LinkedList<>();
 
         commandList.add(new MoveCommand(new SampleDirection(0, 1), 1));
         commandList.add(new MoveCommand(new SampleDirection(0, 1), 1));
