@@ -1,17 +1,17 @@
 package it.unicam.cs.pa.ma114110.controller;
 
 import it.unicam.cs.pa.ma114110.RobotHiveGUI;
-import it.unicam.cs.pa.ma114110.Simulator;
-import it.unicam.cs.pa.ma114110.area.Area;
-import it.unicam.cs.pa.ma114110.area.CircularArea;
-import it.unicam.cs.pa.ma114110.area.RectangleArea;
-import it.unicam.cs.pa.ma114110.command.CommandInterface;
+import it.unicam.cs.pa.ma114110.simulator.SampleSimulator;
+import it.unicam.cs.pa.ma114110.area.SampleArea;
+import it.unicam.cs.pa.ma114110.area.CircularSampleArea;
+import it.unicam.cs.pa.ma114110.area.RectangleSampleArea;
+import it.unicam.cs.pa.ma114110.command.Command;
 import it.unicam.cs.pa.ma114110.command.program.Program;
 import it.unicam.cs.pa.ma114110.parser.CommandParser;
-import it.unicam.cs.pa.ma114110.robot.Robot;
-import it.unicam.cs.pa.ma114110.space.Coords;
-import it.unicam.cs.pa.ma114110.space.CoordsInterface;
-import it.unicam.cs.pa.ma114110.space.Environment;
+import it.unicam.cs.pa.ma114110.robot.SampleRobot;
+import it.unicam.cs.pa.ma114110.space.coords.SampleCoords;
+import it.unicam.cs.pa.ma114110.space.coords.Coords;
+import it.unicam.cs.pa.ma114110.space.enviroment.SampleEnvironment;
 import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -32,10 +32,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
 
-public class GameController implements DataController<Environment> {
-    public Environment environment;
+public class GameController implements DataController<SampleEnvironment> {
+    public SampleEnvironment environment;
 
-    public Simulator simulator;
+    public SampleSimulator simulator;
     public TextArea textArea;
     public Button playButton;
     public TextField addX;
@@ -56,9 +56,9 @@ public class GameController implements DataController<Environment> {
 
     private final HashMap<Integer, Circle> circlesMap = new HashMap<>();
 
-    public void setData(Environment environment) {
+    public void setData(SampleEnvironment environment) {
         this.environment = environment;
-        this.simulator = new Simulator(environment);
+        this.simulator = new SampleSimulator(environment);
 
         spawnArea();
     }
@@ -69,7 +69,7 @@ public class GameController implements DataController<Environment> {
     }
 
     private void spawnRobots() {
-        for (Robot robot : environment.getRobots()) {
+        for (SampleRobot robot : environment.getRobots()) {
             if (!circlesMap.containsKey(robot.getId())) {
                 Circle circle = new Circle(robot.getCoords().x(), robot.getCoords().y(), 10, Color.BLACK);
 
@@ -84,6 +84,7 @@ public class GameController implements DataController<Environment> {
     private void robotSelected(MouseEvent event) {
         if (selectedRobot != null) {
             selectedRobot.setFill(Color.BLACK);
+            textArea.clear();
         }
         this.selectedRobot = (Circle) event.getSource();
         this.selectedRobot.setFill(Color.rgb(163, 224, 124, 1));
@@ -98,7 +99,7 @@ public class GameController implements DataController<Environment> {
         conditionText.setText(environment.getRobotById(id).getCondition().toString());
         labelText.setText(environment.getRobotById(id).getSignal());
 
-        CoordsInterface coords = environment.getRobotById(id).getCoords();
+        Coords coords = environment.getRobotById(id).getCoords();
         xText.setText(String.valueOf(coords.x()));
         yText.setText(String.valueOf(coords.y()));
     }
@@ -115,7 +116,7 @@ public class GameController implements DataController<Environment> {
         }
     }
 
-    private void setProgramToRobot(LinkedList<CommandInterface> commands) {
+    private void setProgramToRobot(LinkedList<Command> commands) {
         Program program = new Program(environment);
         program.setCommandList(commands);
 
@@ -155,16 +156,16 @@ public class GameController implements DataController<Environment> {
 
 
     private void spawnArea() {
-        for (Area area : environment.getAreas()) {
-            switch (area) {
-                case RectangleArea rectangleArea -> spawnRectangleArea(rectangleArea);
-                case CircularArea circularArea -> spawnCircularArea(circularArea);
-                default -> throw new IllegalStateException(STR."Unexpected value: \{area}");
+        for (SampleArea sampleArea : environment.getAreas()) {
+            switch (sampleArea) {
+                case RectangleSampleArea rectangleArea -> spawnRectangleArea(rectangleArea);
+                case CircularSampleArea circularArea -> spawnCircularArea(circularArea);
+                default -> throw new IllegalStateException(STR."Unexpected value: \{sampleArea}");
             }
         }
     }
 
-    private void spawnRectangleArea(RectangleArea area) {
+    private void spawnRectangleArea(RectangleSampleArea area) {
         double x = area.getStart().x();
         double y = area.getStart().y();
         double width = area.getWidth();
@@ -177,7 +178,7 @@ public class GameController implements DataController<Environment> {
         uiEnvironment.getChildren().add(rectangle);
     }
 
-    private void spawnCircularArea(CircularArea area) {
+    private void spawnCircularArea(CircularSampleArea area) {
         double x = area.getCenter().x();
         double y = area.getCenter().y();
         double radius = area.getRadius();
@@ -226,12 +227,12 @@ public class GameController implements DataController<Environment> {
         playButton.setDisable(false);
         textDt.setDisable(false);
         textTime.setDisable(false);
-
+        textDt.clear();
     }
 
     private void uiUpdate(Thread simulatorThread) throws InterruptedException {
         while (simulatorThread.isAlive()) {
-            for (Robot robot : environment.getRobots()) {
+            for (SampleRobot robot : environment.getRobots()) {
                 Circle circle = circlesMap.get(robot.getId());
 
                 TranslateTransition translateTransition = new TranslateTransition();
@@ -242,8 +243,18 @@ public class GameController implements DataController<Environment> {
                 translateTransition.setToY(robot.getCoords().y() - circle.getCenterY());
                 translateTransition.play();
 
+                robotDataUpdate();
             }
         }
+    }
+
+    private void robotDataUpdate() {
+        int id = getSelectedRobotId();
+        Coords coords = environment.getRobotById(id).getCoords();
+        xText.setText(String.valueOf(coords.x()));
+        yText.setText(String.valueOf(coords.y()));
+        labelText.setText(environment.getRobotById(id).getSignal());
+        conditionText.setText(environment.getRobotById(id).getCondition().toString());
     }
 
     public void addRobot(ActionEvent actionEvent) {
@@ -252,7 +263,7 @@ public class GameController implements DataController<Environment> {
             addY.setBorder(Border.stroke(Color.RED));
         } else {
             if (isDouble(addX.getText()) && isDouble(addY.getText())) {
-                environment.addRobot(new Robot(new Coords(Double.parseDouble(addX.getText()), Double.parseDouble(addY.getText())), environment.getNewId()));
+                environment.addRobot(new SampleRobot(new SampleCoords(Double.parseDouble(addX.getText()), Double.parseDouble(addY.getText())), environment.getNewId()));
                 spawnRobots();
             }
 

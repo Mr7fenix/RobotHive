@@ -2,7 +2,7 @@ package it.unicam.cs.pa.ma114110.parser;
 
 import java.io.File;
 
-public interface ParserInterface<T> {
+public interface Parser<T> {
     /**
      * Parse the file at the given path and return the corresponding {@link T}
      * @param path the path of the file to parse

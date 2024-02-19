@@ -1,23 +1,23 @@
 package it.unicam.cs.pa.ma114110.parser;
 
-import it.unicam.cs.pa.ma114110.area.Area;
-import it.unicam.cs.pa.ma114110.area.CircularArea;
-import it.unicam.cs.pa.ma114110.area.RectangleArea;
-import it.unicam.cs.pa.ma114110.space.Coords;
-import it.unicam.cs.pa.ma114110.space.Environment;
+import it.unicam.cs.pa.ma114110.area.SampleArea;
+import it.unicam.cs.pa.ma114110.area.CircularSampleArea;
+import it.unicam.cs.pa.ma114110.area.RectangleSampleArea;
+import it.unicam.cs.pa.ma114110.space.coords.SampleCoords;
+import it.unicam.cs.pa.ma114110.space.enviroment.SampleEnvironment;
 
 import java.io.File;
 import java.util.Scanner;
 
-public class EnvironmentParser implements ParserInterface<Environment> {
-    public Environment parse(String path) {
+public class EnvironmentParser implements Parser<SampleEnvironment> {
+    public SampleEnvironment parse(String path) {
             return parse(new File(path));
     }
 
-    public Environment parse(File file) {
+    public SampleEnvironment parse(File file) {
         try {
             Scanner scanner = new Scanner(file);
-            Environment environment = new Environment();
+            SampleEnvironment environment = new SampleEnvironment();
 
             while (scanner.hasNextLine()){
                 environment.addArea(parseArea(scanner.nextLine()));
@@ -36,7 +36,7 @@ public class EnvironmentParser implements ParserInterface<Environment> {
      * @param line the line to parse
      * @return the parsed area
      */
-    private Area parseArea(String line){
+    private SampleArea parseArea(String line){
         String[] tokens = line.split(" ");
         return switch (tokens[1]){
             case "RECTANGLE" -> parseRectangle(tokens);
@@ -50,14 +50,14 @@ public class EnvironmentParser implements ParserInterface<Environment> {
      * @param tokens the tokens of the line
      * @return the parsed rectangle area
      */
-    private Area parseRectangle(String[] tokens) {
+    private SampleArea parseRectangle(String[] tokens) {
         if (tokens.length != 6) {
             throw new RuntimeException("Invalid number of arguments");
         }
 
-        return new RectangleArea(
+        return new RectangleSampleArea(
                 tokens[0],
-                new Coords(Double.parseDouble(tokens[2]), Double.parseDouble(tokens[3])),
+                new SampleCoords(Double.parseDouble(tokens[2]), Double.parseDouble(tokens[3])),
                 Double.parseDouble(tokens[4]),
                 Double.parseDouble(tokens[5])
         );
@@ -68,14 +68,14 @@ public class EnvironmentParser implements ParserInterface<Environment> {
      * @param tokens the tokens of the line
      * @return the parsed circular area
      */
-    private Area parseCircle(String[] tokens) {
+    private SampleArea parseCircle(String[] tokens) {
         if (tokens.length != 5) {
             throw new RuntimeException("Invalid number of arguments");
         }
 
-        return new CircularArea(
+        return new CircularSampleArea(
                 tokens[0],
-                new Coords(Double.parseDouble(tokens[2]), Double.parseDouble(tokens[3])),
+                new SampleCoords(Double.parseDouble(tokens[2]), Double.parseDouble(tokens[3])),
                 Double.parseDouble(tokens[4])
         );
     }

@@ -1,14 +1,14 @@
 package it.unicam.cs.pa.ma114110.command.iteration;
 
-import it.unicam.cs.pa.ma114110.command.SampleCommand;
+import it.unicam.cs.pa.ma114110.command.Command;
 
 import java.util.LinkedList;
 
-public abstract class IterationCommand implements CommandInterface {
-    private final LinkedList<CommandInterface> commandList;
+public abstract class IterationCommand implements Command {
+    private final LinkedList<Command> commandList;
 
 
-    public IterationCommand (LinkedList<SampleCommand> commandList){
+    public IterationCommand (LinkedList<Command> commandList){
         if (commandList == null) {
             throw new NullPointerException("Program cannot be null");
         }
@@ -16,7 +16,7 @@ public abstract class IterationCommand implements CommandInterface {
         this.commandList = commandList;
     }
 
-    public LinkedList<SampleCommand> getCommandList() {
+    public LinkedList<Command> getCommandList() {
         return commandList;
     }
 }

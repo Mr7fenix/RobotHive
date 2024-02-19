@@ -10,8 +10,8 @@ import it.unicam.cs.pa.ma114110.command.move.FollowCommand;
 import it.unicam.cs.pa.ma114110.command.move.MoveCommand;
 import it.unicam.cs.pa.ma114110.command.move.MoveRandomCommand;
 import it.unicam.cs.pa.ma114110.command.signal.SignalingCommand;
-import it.unicam.cs.pa.ma114110.space.Coords;
-import it.unicam.cs.pa.ma114110.space.Direction;
+import it.unicam.cs.pa.ma114110.space.coords.SampleCoords;
+import it.unicam.cs.pa.ma114110.space.direction.SampleDirection;
 
 import java.io.File;
 import java.util.Arrays;
@@ -19,7 +19,7 @@ import java.util.LinkedList;
 import java.util.Objects;
 import java.util.Scanner;
 
-public class CommandParser implements ParserInterface<LinkedList<CommandInterface>> {
+public class CommandParser implements Parser<LinkedList<Command>> {
 
     /**
      * Parse a program from a file
@@ -27,12 +27,12 @@ public class CommandParser implements ParserInterface<LinkedList<CommandInterfac
      * @param path the path of the file to parse
      * @return the program
      */
-    public LinkedList<CommandInterface> parse(String path) {
+    public LinkedList<Command> parse(String path) {
         return parse(new File(path));
     }
 
     @Override
-    public LinkedList<CommandInterface> parse(File file) {
+    public LinkedList<Command> parse(File file) {
         try {
             Scanner scanner = new Scanner(file);
 
@@ -81,8 +81,8 @@ public class CommandParser implements ParserInterface<LinkedList<CommandInterfac
      * @param scanner used for get the iteration program
      * @return the program
      */
-    private CommandInterface parseIterationCommand(String line, Scanner scanner) {
-        LinkedList<CommandInterface> commands = parseIterationProgram(scanner);
+    private Command parseIterationCommand(String line, Scanner scanner) {
+        LinkedList<Command> commands = parseIterationProgram(scanner);
 
         String[] tokens = line.split(" ");
         return switch (tokens[0]) {
@@ -100,7 +100,7 @@ public class CommandParser implements ParserInterface<LinkedList<CommandInterfac
      * @param commands list of commands to repeat
      * @return the program
      */
-    private CommandInterface parseDoCommand(String[] tokens, LinkedList<CommandInterface> commands) {
+    private Command parseDoCommand(String[] tokens, LinkedList<Command> commands) {
         if (tokens.length != 2) {
             throw new RuntimeException(STR."\{Arrays.toString(tokens)} is not a valid DO FOREVER command");
         }
@@ -115,7 +115,7 @@ public class CommandParser implements ParserInterface<LinkedList<CommandInterfac
      * @param commands list of commands to repeat
      * @return the program
      */
-    private CommandInterface parseRepeatCommand(String[] tokens, LinkedList<CommandInterface> commands) {
+    private Command parseRepeatCommand(String[] tokens, LinkedList<Command> commands) {
         if (tokens.length != 2) {
             throw new RuntimeException(STR."\{Arrays.toString(tokens)} is not a valid REPEAT command");
         }
@@ -133,7 +133,7 @@ public class CommandParser implements ParserInterface<LinkedList<CommandInterfac
      * @param commands list of commands to repeat
      * @return the program
      */
-    private CommandInterface parseUntilCommand(String[] tokens, LinkedList<CommandInterface> commands) {
+    private Command parseUntilCommand(String[] tokens, LinkedList<Command> commands) {
         if (tokens.length != 2) {
             throw new RuntimeException(STR."\{Arrays.toString(tokens)} is not a valid UNTIL command");
         }
@@ -205,7 +205,7 @@ public class CommandParser implements ParserInterface<LinkedList<CommandInterfac
         }
 
         return new MoveCommand(
-                new Direction(Double.parseDouble(tokens[1]), Double.parseDouble(tokens[2])),
+                new SampleDirection(Double.parseDouble(tokens[1]), Double.parseDouble(tokens[2])),
                 Double.parseDouble(tokens[3])
         );
     }
@@ -222,8 +222,8 @@ public class CommandParser implements ParserInterface<LinkedList<CommandInterfac
         }
 
         return new MoveRandomCommand(
-                new Coords(Double.parseDouble(tokens[2]), Double.parseDouble(tokens[3])),
-                new Coords(Double.parseDouble(tokens[4]), Double.parseDouble(tokens[5])),
+                new SampleCoords(Double.parseDouble(tokens[2]), Double.parseDouble(tokens[3])),
+                new SampleCoords(Double.parseDouble(tokens[4]), Double.parseDouble(tokens[5])),
                 Double.parseDouble(tokens[6]));
     }
 

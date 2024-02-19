@@ -1,20 +1,19 @@
 package it.unicam.cs.pa.ma114110.command.program;
 
-import it.unicam.cs.pa.ma114110.command.CommandInterface;
-import it.unicam.cs.pa.ma114110.space.Environment;
-import it.unicam.cs.pa.ma114110.space.EnvironmentInterface;
+import it.unicam.cs.pa.ma114110.command.Command;
+import it.unicam.cs.pa.ma114110.space.enviroment.Environment;
 
 import java.util.Deque;
 
 public interface ProgramInterface {
-    LinkedList<SampleCommand> getCommandList();
+    Deque<Command> getCommandList();
 
     /**
      * This method returns the last command of the program and removes it from the program
      *
      * @return the last command of the program, return null if the program is empty
      */
-    SampleCommand getNextCommand();
+    Command getNextCommand();
 
 
     /**
@@ -22,14 +21,14 @@ public interface ProgramInterface {
      *
      * @return the last command of the program
      */
-    SampleCommand getCommand();
+    Command getCommand();
 
     /**
      * This method adds a command to the program
      *
      * @param command the command to add
      */
-    <T extends SampleCommand> void addCommand(T command);
+    <T extends Command> void addCommand(T command);
 
 
     /**
@@ -54,7 +53,7 @@ public interface ProgramInterface {
      *
      * @param commandList the command list to set
      */
-    void setCommandList(LinkedList<SampleCommand> commandList);
+    void setCommandList(Deque<Command> commandList);
 
     /**
      * This method returns the size of the program
@@ -68,11 +67,11 @@ public interface ProgramInterface {
      *
      * @return the space of the program is executed
      */
-    EnvironmentInterface getSpace();
+    Environment getSpace();
 
     /**
      * this method add command at the first position of the Deque
      * @param command command to add on the Deque
      */
-    void addFirst(CommandInterface command);
+    void addFirst(Command command);
 }

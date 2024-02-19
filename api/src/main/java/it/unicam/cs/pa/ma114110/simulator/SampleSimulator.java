@@ -1,15 +1,12 @@
-package it.unicam.cs.pa.ma114110;
+package it.unicam.cs.pa.ma114110.simulator;
 
-import it.unicam.cs.pa.ma114110.robot.Robot;
-import it.unicam.cs.pa.ma114110.space.Environment;
+import it.unicam.cs.pa.ma114110.robot.SampleRobot;
+import it.unicam.cs.pa.ma114110.space.enviroment.Environment;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class Simulator implements SimulatorInterface {
+public class SampleSimulator implements Simulator {
     private final Environment environment;
 
-    public Simulator(EnvironmentInterface environment) {
+    public SampleSimulator(Environment environment) {
         if (environment == null) throw new NullPointerException("space must be null");
 
         this.environment = environment;
@@ -25,7 +22,7 @@ public class Simulator implements SimulatorInterface {
     @Override
     public double simulateStepByStep(double dt, double time, double currentTime) {
         if (!(currentTime > time)){
-            for (Robot robot : environment.getRobots()) {
+            for (SampleRobot robot : environment.getRobots()) {
                 robot.executeNextCommand(dt);
             }
 

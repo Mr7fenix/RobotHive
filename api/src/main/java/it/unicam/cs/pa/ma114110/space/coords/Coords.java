@@ -1,9 +1,9 @@
-package it.unicam.cs.pa.ma114110.space;
+package it.unicam.cs.pa.ma114110.space.coords;
 
 /**
  * Coords: interface for the coordinates of a cell
  */
-public interface CoordsInterface {
+public interface Coords {
     /**
      * @return the x coordinate for the specifico cell
      */

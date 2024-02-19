@@ -6,7 +6,7 @@ import it.unicam.cs.pa.ma114110.command.move.MoveCommand;
 import it.unicam.cs.pa.ma114110.command.move.MoveRandomCommand;
 import it.unicam.cs.pa.ma114110.command.program.Program;
 import it.unicam.cs.pa.ma114110.command.signal.SignalingCommand;
-import it.unicam.cs.pa.ma114110.space.Environment;
+import it.unicam.cs.pa.ma114110.space.enviroment.SampleEnvironment;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -16,7 +16,7 @@ class CommandParserTest {
     @Test
     void parse() {
         CommandParser parser = new CommandParser();
-        Environment environment = new Environment();
+        SampleEnvironment environment = new SampleEnvironment();
 
 
         Program program = new Program(environment);
@@ -30,7 +30,7 @@ class CommandParserTest {
     @Test
     void parseMove() {
         CommandParser parser = new CommandParser();
-        Environment environment = new Environment();
+        SampleEnvironment environment = new SampleEnvironment();
 
         Program program = new Program(environment);
         program.setCommandList(parser.parse("../api/src/test/resources/parserTest/test_MOVE"));
@@ -40,7 +40,7 @@ class CommandParserTest {
     @Test
     void parseMoveRandom() {
         CommandParser parser = new CommandParser();
-        Environment environment = new Environment();
+        SampleEnvironment environment = new SampleEnvironment();
 
         Program program = new Program(environment);
         program.setCommandList(parser.parse("../api/src/test/resources/parserTest/test_MOVE_RANDOM"));
@@ -50,7 +50,7 @@ class CommandParserTest {
     @Test
     void parseSignal() {
         CommandParser parser = new CommandParser();
-        Environment environment = new Environment();
+        SampleEnvironment environment = new SampleEnvironment();
 
         Program program = new Program(environment);
         program.setCommandList(parser.parse("../api/src/test/resources/parserTest/test_SIGNAL"));
@@ -60,7 +60,7 @@ class CommandParserTest {
     @Test
     void parseUnSignal() {
         CommandParser parser = new CommandParser();
-        Environment environment = new Environment();
+        SampleEnvironment environment = new SampleEnvironment();
 
         Program program = new Program(environment);
         program.setCommandList(parser.parse("../api/src/test/resources/parserTest/test_UNSIGNAL"));
@@ -70,7 +70,7 @@ class CommandParserTest {
     @Test
     void parseFollow() {
         CommandParser parser = new CommandParser();
-        Environment environment = new Environment();
+        SampleEnvironment environment = new SampleEnvironment();
 
         Program program = new Program(environment);
         program.setCommandList(parser.parse("../api/src/test/resources/parserTest/test_FOLLOW"));
@@ -81,7 +81,7 @@ class CommandParserTest {
     @Test
     void parseContinue() {
         CommandParser parser = new CommandParser();
-        Environment environment = new Environment();
+        SampleEnvironment environment = new SampleEnvironment();
 
         Program program = new Program(environment);
         program.setCommandList(parser.parse("../api/src/test/resources/parserTest/test_CONTINUE"));
@@ -92,7 +92,7 @@ class CommandParserTest {
     @Test
     void parseRepeat() {
         CommandParser parser = new CommandParser();
-        Environment environment = new Environment();
+        SampleEnvironment environment = new SampleEnvironment();
 
         Program program = new Program(environment);
         program.setCommandList(parser.parse("../api/src/test/resources/parserTest/test_REPEAT"));
@@ -104,7 +104,7 @@ class CommandParserTest {
     @Test
     void parseUntil() {
         CommandParser parser = new CommandParser();
-        Environment environment = new Environment();
+        SampleEnvironment environment = new SampleEnvironment();
 
         Program program = new Program(environment);
         program.setCommandList(parser.parse("../api/src/test/resources/parserTest/test_UNTIL"));
@@ -116,7 +116,7 @@ class CommandParserTest {
     @Test
     void parseDoForever() {
         CommandParser parser = new CommandParser();
-        Environment environment = new Environment();
+        SampleEnvironment environment = new SampleEnvironment();
 
         Program program = new Program(environment);
         program.setCommandList(parser.parse("../api/src/test/resources/parserTest/test_FOREVER"));

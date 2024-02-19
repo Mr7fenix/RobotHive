@@ -1,9 +1,9 @@
 package it.unicam.cs.pa.ma114110.command.move;
 
-import it.unicam.cs.pa.ma114110.command.CommandInterface;
-import it.unicam.cs.pa.ma114110.space.Direction;
+import it.unicam.cs.pa.ma114110.command.Command;
+import it.unicam.cs.pa.ma114110.space.direction.SampleDirection;
 
-public record MoveCommand(Direction direction, double s) implements CommandInterface {
+public record MoveCommand(SampleDirection direction, double s) implements Command {
     public MoveCommand {
 
         if (direction == null) {

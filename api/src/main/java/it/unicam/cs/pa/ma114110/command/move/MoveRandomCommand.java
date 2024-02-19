@@ -1,9 +1,9 @@
 package it.unicam.cs.pa.ma114110.command.move;
 
-import it.unicam.cs.pa.ma114110.command.CommandInterface;
-import it.unicam.cs.pa.ma114110.space.CoordsInterface;
+import it.unicam.cs.pa.ma114110.command.Command;
+import it.unicam.cs.pa.ma114110.space.coords.Coords;
 
-public record MoveRandomCommand(CoordsInterface firstPoint, CoordsInterface secondPoint, double s) implements CommandInterface {
+public record MoveRandomCommand(Coords firstPoint, Coords secondPoint, double s) implements Command {
     public MoveRandomCommand {
 
         if (firstPoint == null) {

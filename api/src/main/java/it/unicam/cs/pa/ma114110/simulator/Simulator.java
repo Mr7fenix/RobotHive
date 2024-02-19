@@ -1,8 +1,6 @@
-package it.unicam.cs.pa.ma114110;
+package it.unicam.cs.pa.ma114110.simulator;
 
-import java.util.List;
-
-public interface SimulatorInterface {
+public interface Simulator {
     /**
      * This method simulates the environment for the given time.
      * @param dt the time step

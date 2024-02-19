@@ -1,4 +1,4 @@
-package it.unicam.cs.pa.ma114110.space;
+package it.unicam.cs.pa.ma114110.space.direction;
 
 /**
  * This interface represents a direction, it can be used to move a robot.
@@ -6,7 +6,7 @@ package it.unicam.cs.pa.ma114110.space;
  * x and y can be between -1 and 1.
  */
 
-public interface DirectionInterface {
+public interface Direction {
 
         /**
         * @return x coordinate of the direction

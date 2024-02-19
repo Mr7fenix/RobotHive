@@ -1,14 +1,14 @@
 package it.unicam.cs.pa.ma114110.area;
 
-import it.unicam.cs.pa.ma114110.space.Coords;
-import it.unicam.cs.pa.ma114110.space.CoordsInterface;
+import it.unicam.cs.pa.ma114110.space.coords.SampleCoords;
+import it.unicam.cs.pa.ma114110.space.coords.Coords;
 
-public class RectangleArea extends Area {
-    private final Coords start;
+public class RectangleSampleArea extends SampleArea {
+    private final SampleCoords start;
     private final double height;
     private final double width;
 
-    public RectangleArea(String label, Coords start, double height, double width) {
+    public RectangleSampleArea(String label, SampleCoords start, double height, double width) {
         super(label);
 
         if (start == null) {
@@ -28,12 +28,12 @@ public class RectangleArea extends Area {
         this.width = width;
     }
 
-    public Coords getStart() {
+    public SampleCoords getStart() {
         return start;
     }
 
     @Override
-    public boolean contains(CoordsInterface coords) {
+    public boolean contains(Coords coords) {
         if (coords == null) {
             throw new NullPointerException("Coords cannot be null");
         }

@@ -10,5 +10,5 @@ package it.unicam.cs.pa.ma114110.command;
  *  - FollowCommand
  *  - StopCommand
  */
-public interface CommandInterface {
+public interface Command {
 }

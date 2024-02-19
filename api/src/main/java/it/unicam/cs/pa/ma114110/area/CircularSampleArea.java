@@ -1,13 +1,13 @@
 package it.unicam.cs.pa.ma114110.area;
 
-import it.unicam.cs.pa.ma114110.space.Coords;
-import it.unicam.cs.pa.ma114110.space.CoordsInterface;
+import it.unicam.cs.pa.ma114110.space.coords.SampleCoords;
+import it.unicam.cs.pa.ma114110.space.coords.Coords;
 
-public class CircularArea extends Area {
+public class CircularSampleArea extends SampleArea {
     private final double radius;
-    private final Coords center;
+    private final SampleCoords center;
 
-    public CircularArea(String label, Coords center, double radius) {
+    public CircularSampleArea(String label, SampleCoords center, double radius) {
         super(label);
 
         if (center == null) {
@@ -26,12 +26,12 @@ public class CircularArea extends Area {
         return radius;
     }
 
-    public Coords getCenter() {
+    public SampleCoords getCenter() {
         return center;
     }
 
     @Override
-    public boolean contains(CoordsInterface coords) {
+    public boolean contains(Coords coords) {
         double distance = Math.sqrt(Math.pow(coords.x() - center.x(), 2) + Math.pow(coords.y() - center.y(), 2));
         return distance <= radius;
     }

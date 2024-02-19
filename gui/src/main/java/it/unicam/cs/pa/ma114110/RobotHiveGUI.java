@@ -2,7 +2,7 @@ package it.unicam.cs.pa.ma114110;
 
 import it.unicam.cs.pa.ma114110.controller.DataController;
 import it.unicam.cs.pa.ma114110.parser.EnvironmentParser;
-import it.unicam.cs.pa.ma114110.space.Environment;
+import it.unicam.cs.pa.ma114110.space.enviroment.SampleEnvironment;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -51,7 +51,7 @@ public class RobotHiveGUI extends Application {
         stage.setScene(scene);
     }
 
-    public  <C extends DataController<Environment>> Parent setDataToController(String path, File file) throws IOException {
+    public  <C extends DataController<SampleEnvironment>> Parent setDataToController(String path, File file) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource(path));
         Parent root  = loader.load();
         C controller = loader.getController();
@@ -60,7 +60,7 @@ public class RobotHiveGUI extends Application {
         return root;
     }
 
-    private Environment parseFile(File file) {
+    private SampleEnvironment parseFile(File file) {
         EnvironmentParser parser = new EnvironmentParser();
         return parser.parse(file);
     }

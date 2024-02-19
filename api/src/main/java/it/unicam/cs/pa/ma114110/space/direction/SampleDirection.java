@@ -1,10 +1,10 @@
-package it.unicam.cs.pa.ma114110.space;
+package it.unicam.cs.pa.ma114110.space.direction;
 
-public class Direction implements DirectionInterface {
+public class SampleDirection implements Direction {
     private final double x;
     private final double y;
 
-    public Direction(double x, double y) {
+    public SampleDirection(double x, double y) {
         if (x > 1 || x < -1) {
             throw new IllegalArgumentException("x must be between -1 and 1");
         }

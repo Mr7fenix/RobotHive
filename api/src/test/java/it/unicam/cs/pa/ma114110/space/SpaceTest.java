@@ -1,7 +1,9 @@
 package it.unicam.cs.pa.ma114110.space;
 
-import it.unicam.cs.pa.ma114110.area.RectangleArea;
-import it.unicam.cs.pa.ma114110.robot.Robot;
+import it.unicam.cs.pa.ma114110.area.RectangleSampleArea;
+import it.unicam.cs.pa.ma114110.robot.SampleRobot;
+import it.unicam.cs.pa.ma114110.space.coords.SampleCoords;
+import it.unicam.cs.pa.ma114110.space.enviroment.SampleEnvironment;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -10,31 +12,31 @@ class SpaceTest {
 
     @Test
     void addRobot() {
-        Environment environment = new Environment();
-        assertThrowsExactly(IllegalArgumentException.class, () -> environment.addRobot((Robot) null));
-        environment.addRobot(new Robot(new Coords(0, 0), 1));
+        SampleEnvironment environment = new SampleEnvironment();
+        assertThrowsExactly(IllegalArgumentException.class, () -> environment.addRobot((SampleRobot) null));
+        environment.addRobot(new SampleRobot(new SampleCoords(0, 0), 1));
         assertEquals(1, environment.getRobots().size());
     }
 
     @Test
     void getRobots() {
-        Environment environment = new Environment();
-        environment.addRobot(new Robot(new Coords(0, 0), 1));
+        SampleEnvironment environment = new SampleEnvironment();
+        environment.addRobot(new SampleRobot(new SampleCoords(0, 0), 1));
         assertEquals(1, environment.getRobots().size());
     }
 
     @Test
     void getRobotByCoords() {
-        Environment environment = new Environment();
-        Robot robot = new Robot(new Coords(0, 0), 1);
+        SampleEnvironment environment = new SampleEnvironment();
+        SampleRobot robot = new SampleRobot(new SampleCoords(0, 0), 1);
         environment.addRobot(robot);
-        assertEquals(robot, environment.getRobotByCoords(new Coords(0, 0)));
+        assertEquals(robot, environment.getRobotByCoords(new SampleCoords(0, 0)));
     }
 
     @Test
     void removeRobot() {
-        Environment environment = new Environment();
-        Robot robot = new Robot(new Coords(0, 0), 1);
+        SampleEnvironment environment = new SampleEnvironment();
+        SampleRobot robot = new SampleRobot(new SampleCoords(0, 0), 1);
         environment.addRobot(robot);
         environment.removeRobot(robot);
         assertEquals(0, environment.getRobots().size());
@@ -44,9 +46,9 @@ class SpaceTest {
 
     @Test
     void addArea() {
-        Environment environment = new Environment();
+        SampleEnvironment environment = new SampleEnvironment();
         assertThrowsExactly(IllegalArgumentException.class, () -> environment.addArea(null));
-        environment.addArea(new RectangleArea("Ciao", new Coords(0, 0), 1, 1));
+        environment.addArea(new RectangleSampleArea("Ciao", new SampleCoords(0, 0), 1, 1));
         assertEquals(1, environment.getAreas().size());
     }
 }

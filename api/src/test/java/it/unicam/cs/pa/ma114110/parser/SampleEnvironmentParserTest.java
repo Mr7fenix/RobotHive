@@ -1,12 +1,12 @@
 package it.unicam.cs.pa.ma114110.parser;
 
-import it.unicam.cs.pa.ma114110.area.CircularArea;
-import it.unicam.cs.pa.ma114110.area.RectangleArea;
+import it.unicam.cs.pa.ma114110.area.CircularSampleArea;
+import it.unicam.cs.pa.ma114110.area.RectangleSampleArea;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class EnvironmentParserTest {
+class SampleEnvironmentParserTest {
 
     @Test
     void parse() {
@@ -17,12 +17,12 @@ class EnvironmentParserTest {
     @Test
     void parseRectangle() {
         EnvironmentParser parser = new EnvironmentParser();
-        assertInstanceOf(RectangleArea.class, parser.parse("../api/src/test/resources/parserTest/test_RECTANGLE_AREA").getAreas().getFirst());
+        assertInstanceOf(RectangleSampleArea.class, parser.parse("../api/src/test/resources/parserTest/test_RECTANGLE_AREA").getAreas().getFirst());
     }
 
     @Test
     void parseCircle() {
         EnvironmentParser parser = new EnvironmentParser();
-        assertInstanceOf(CircularArea.class, parser.parse("../api/src/test/resources/parserTest/test_CIRCLE_AREA").getAreas().getFirst());
+        assertInstanceOf(CircularSampleArea.class, parser.parse("../api/src/test/resources/parserTest/test_CIRCLE_AREA").getAreas().getFirst());
     }
 }

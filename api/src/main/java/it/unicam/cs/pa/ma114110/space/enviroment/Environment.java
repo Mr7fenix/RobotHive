@@ -1,7 +1,8 @@
-package it.unicam.cs.pa.ma114110.space;
+package it.unicam.cs.pa.ma114110.space.enviroment;
 
-import it.unicam.cs.pa.ma114110.area.Area;
-import it.unicam.cs.pa.ma114110.robot.Robot;
+import it.unicam.cs.pa.ma114110.area.SampleArea;
+import it.unicam.cs.pa.ma114110.robot.SampleRobot;
+import it.unicam.cs.pa.ma114110.space.coords.SampleCoords;
 
 import java.util.List;
 
@@ -11,24 +12,24 @@ import java.util.List;
  * <p>
  * his responsibility is to provide a list of all cells and list of all aras
  */
-public interface EnvironmentInterface {
+public interface Environment {
     /**
      * This method is used to add a robot to the space
      * @param robot robot to add
      */
-    void addRobot(Robot robot);
+    void addRobot(SampleRobot robot);
 
     /**
      * This method is used to remove a robot from the space
      * @param robot robot to remove
      */
-    void removeRobot(Robot robot);
+    void removeRobot(SampleRobot robot);
 
     /**
      * This method is used to add area in the space
-     * @param area area to add
+     * @param sampleArea area to add
      */
-    void addArea(Area area);
+    void addArea(SampleArea sampleArea);
 
     /**
      * This method is used to generate random robots in random coords on the space
@@ -39,24 +40,24 @@ public interface EnvironmentInterface {
      * This method is used to get all robots in the space
      * @return list of all robots
      */
-    List<Robot> getRobots();
+    List<SampleRobot> getRobots();
 
     /**
      * This method is used to get a robot by coords
      * @param coords coords of the robot
      * @return robot or null if not found
      */
-    Robot getRobotByCoords(Coords coords);
+    SampleRobot getRobotByCoords(SampleCoords coords);
 
     /**
      * This method is used to get all areas in the space
      * @return list of all areas
      */
-    List<Area> getAreas();
+    List<SampleArea> getAreas();
 
     /**
      * This method is used to get robot by id
      * @return robot whit corresponding id
      */
-    Robot getRobotById(int id);
+    SampleRobot getRobotById(int id);
 }
