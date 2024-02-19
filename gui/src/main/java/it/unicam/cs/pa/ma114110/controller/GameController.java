@@ -227,7 +227,7 @@ public class GameController implements DataController<SampleEnvironment> {
         playButton.setDisable(false);
         textDt.setDisable(false);
         textTime.setDisable(false);
-        textDt.clear();
+        textArea.clear();
     }
 
     private void uiUpdate(Thread simulatorThread) throws InterruptedException {

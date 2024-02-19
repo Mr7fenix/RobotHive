@@ -41,7 +41,7 @@ public class EnvironmentParser implements Parser<SampleEnvironment> {
         return switch (tokens[1]){
             case "RECTANGLE" -> parseRectangle(tokens);
             case "CIRCLE" -> parseCircle(tokens);
-            default -> throw new RuntimeException("Invalid area type");
+            default -> throw new RuntimeException(STR."Invalid area type\{tokens[1]}");
         };
     }
 
