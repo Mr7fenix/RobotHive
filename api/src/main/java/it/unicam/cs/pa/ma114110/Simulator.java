@@ -23,9 +23,15 @@ public class Simulator implements SimulatorInterface {
     }
 
     @Override
-    public void simulateStepByStep(double dt, double time, double currentTime) {
-        for (Robot robot : environment.getRobots()) {
-            robot.executeNextCommand(dt);
+    public double simulateStepByStep(double dt, double time, double currentTime) {
+        if (!(currentTime > time)){
+            for (Robot robot : environment.getRobots()) {
+                robot.executeNextCommand(dt);
+            }
+
+            return currentTime + dt;
         }
+
+        return 0;
     }
 }

@@ -40,6 +40,8 @@ public class GameController implements DataController<Environment> {
     public Button playButton;
     public TextField addX;
     public TextField addY;
+    public TextField textDt;
+    public TextField textTime;
     private Circle selectedRobot;
 
     public Button genRobot;
@@ -49,6 +51,8 @@ public class GameController implements DataController<Environment> {
     public TextField labelText;
     public TextField xText;
     public TextField yText;
+
+    private double currentTime = 0;
 
     private final HashMap<Integer, Circle> circlesMap = new HashMap<>();
 
@@ -184,23 +188,38 @@ public class GameController implements DataController<Environment> {
     }
 
     public void play(ActionEvent actionEvent) {
+        boolean isStepByStep = actionEvent.getSource().equals(playButton);
+        if (isDouble(textDt.getText()) && isDouble(textTime.getText())) {
+            timeCorrect();
+            Thread simulatorThread = new Thread(() -> playThread(isStepByStep));
+            simulatorThread.start();
+
+            Thread uiThread = new Thread(() -> {
+                try {
+                    uiUpdate(simulatorThread);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+            uiThread.start();
+        } else {
+            timeError();
+        }
+
+    }
+
+    private void playThread(boolean isStepByStep) {
         playButton.setDisable(true);
 
-        Thread simulatorThread = new Thread(() -> {
-            simulator.simulate(10, 1000);
-            playButton.setDisable(false);
-        });
+        if (isStepByStep) {
+            currentTime = simulator.simulateStepByStep(Double.parseDouble(textDt.getText()), Double.parseDouble(textTime.getText()), currentTime);
+        } else {
+            simulator.simulate(Double.parseDouble(textDt.getText()), getCorrectTime());
+        }
 
-        simulatorThread.start();
 
-        Thread uiThread = new Thread(() -> {
-            try {
-                uiUpdate(simulatorThread);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        });
-        uiThread.start();
+        playButton.setDisable(false);
+
     }
 
     private void uiUpdate(Thread simulatorThread) throws InterruptedException {
@@ -215,11 +234,8 @@ public class GameController implements DataController<Environment> {
                 translateTransition.setToX(robot.getCoords().x() - circle.getCenterX());
                 translateTransition.setToY(robot.getCoords().y() - circle.getCenterY());
                 translateTransition.play();
-//                circle.setCenterX(robot.getCoords().getX() - circle.getCenterX());
-//                circle.setCenterY(robot.getCoords().getY() - circle.getCenterY());
+
             }
-            setRobotField(getSelectedRobotId());
-//            Thread.sleep(100);
         }
     }
 
@@ -229,9 +245,31 @@ public class GameController implements DataController<Environment> {
             addY.setBorder(Border.stroke(Color.RED));
         }
 
-        if (addX.getText().matches("^[0-9]+(\\.[0-9]+)?$") && addY.getText().matches("^[0-9]+(\\.[0-9]+)?$")) {
+        if (isDouble(addX.getText()) && isDouble(addY.getText())) {
             environment.addRobot(new Robot(new Coords(Double.parseDouble(addX.getText()), Double.parseDouble(addY.getText())), environment.getNewId()));
             spawnRobots();
+        }
+    }
+
+    private boolean isDouble(String s) {
+        return s.matches("^[0-9]+(\\.[0-9]+)?$");
+    }
+
+    private void timeError() {
+        textDt.setBorder(Border.stroke(Color.RED));
+        textTime.setBorder(Border.stroke(Color.RED));
+    }
+
+    private void timeCorrect() {
+        textDt.setBorder(Border.EMPTY);
+        textTime.setBorder(Border.EMPTY);
+    }
+
+    private double getCorrectTime() {
+        if (currentTime == 0) {
+            return Double.parseDouble(textDt.getText());
+        } else {
+            return currentTime;
         }
     }
 }

@@ -16,5 +16,5 @@ public interface SimulatorInterface {
      * @param time the time to simulate
      * @param currentTime the current time of the simulation
      */
-    void simulateStepByStep(double dt, double time, double currentTime);
+    double simulateStepByStep(double dt, double time, double currentTime);
 }
