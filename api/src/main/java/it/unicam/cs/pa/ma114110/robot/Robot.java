@@ -148,9 +148,9 @@ public class Robot implements RobotInterface {
      * @param command to set
      */
     private void signaling(SignalingCommand command) {
-        if (command.signal()){
+        if (command.signal()) {
             this.signal = command.label();
-        }else {
+        } else {
             if (Objects.equals(this.signal, command.label())) {
                 this.signal = null;
             }
@@ -167,8 +167,8 @@ public class Robot implements RobotInterface {
         List<RobotInterface> followersList = new LinkedList<>();
 
         for (RobotInterface robot : program.getSpace().getRobots()) {
-            if (Objects.equals(robot.getSignal(), command.label())){
-                if (Math.sqrt(Math.pow(robot.getCoords().x() - coords.x(), 2) + Math.pow(robot.getCoords().x() - coords.y(), 2)) < command.distance()){
+            if (Objects.equals(robot.getSignal(), command.label())) {
+                if (Math.sqrt(Math.pow(robot.getCoords().x() - coords.x(), 2) + Math.pow(robot.getCoords().x() - coords.y(), 2)) < command.distance()) {
                     followersList.add(robot);
                 }
             }
@@ -254,11 +254,16 @@ public class Robot implements RobotInterface {
      */
 
     private void repeat(RepeatCommand cmd, double dt) {
-        for (int i = 0; i < cmd.getTimes(); i++) {
-            for (SampleCommand command : cmd.getCommandList()) {
-                commandSorter(command, dt);
-            }
+        if (cmd.getTimes() == 0) {
+            return;
         }
+
+        program.addFirst(new RepeatCommand(cmd.getTimes() - 1, cmd.getCommandList()));
+        for (CommandInterface command : cmd.getCommandList().reversed()) {
+            program.addFirst(command);
+        }
+
+        executeNextCommand(dt);
     }
 
     /**

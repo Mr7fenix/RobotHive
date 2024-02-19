@@ -70,12 +70,14 @@ public class GameController implements DataController<Environment> {
 
     private void spawnRobots() {
         for (Robot robot : environment.getRobots()) {
-            Circle circle = new Circle(robot.getCoords().x(), robot.getCoords().y(), 10, Color.BLACK);
+            if (!circlesMap.containsKey(robot.getId())) {
+                Circle circle = new Circle(robot.getCoords().x(), robot.getCoords().y(), 10, Color.BLACK);
 
-            circle.setOnMouseClicked(this::robotSelected);
-            circlesMap.put(robot.getId(), circle);
+                circle.setOnMouseClicked(this::robotSelected);
+                circlesMap.put(robot.getId(), circle);
 
-            uiEnvironment.getChildren().add(circle);
+                uiEnvironment.getChildren().add(circle);
+            }
         }
     }
 
@@ -188,7 +190,8 @@ public class GameController implements DataController<Environment> {
     }
 
     public void play(ActionEvent actionEvent) {
-        boolean isStepByStep = actionEvent.getSource().equals(playButton);
+        boolean isStepByStep = !actionEvent.getSource().equals(playButton);
+
         if (isDouble(textDt.getText()) && isDouble(textTime.getText())) {
             timeCorrect();
             Thread simulatorThread = new Thread(() -> playThread(isStepByStep));
@@ -210,15 +213,19 @@ public class GameController implements DataController<Environment> {
 
     private void playThread(boolean isStepByStep) {
         playButton.setDisable(true);
+        textDt.setDisable(true);
+        textTime.setDisable(true);
 
         if (isStepByStep) {
             currentTime = simulator.simulateStepByStep(Double.parseDouble(textDt.getText()), Double.parseDouble(textTime.getText()), currentTime);
         } else {
-            simulator.simulate(Double.parseDouble(textDt.getText()), getCorrectTime());
+            simulator.simulate(Double.parseDouble(textDt.getText()), Double.parseDouble(textTime.getText()));
         }
 
 
         playButton.setDisable(false);
+        textDt.setDisable(false);
+        textTime.setDisable(false);
 
     }
 
@@ -243,11 +250,14 @@ public class GameController implements DataController<Environment> {
         if (addX.getText().isEmpty() || addY.getText().isEmpty()) {
             addX.setBorder(Border.stroke(Color.RED));
             addY.setBorder(Border.stroke(Color.RED));
-        }
+        } else {
+            if (isDouble(addX.getText()) && isDouble(addY.getText())) {
+                environment.addRobot(new Robot(new Coords(Double.parseDouble(addX.getText()), Double.parseDouble(addY.getText())), environment.getNewId()));
+                spawnRobots();
+            }
 
-        if (isDouble(addX.getText()) && isDouble(addY.getText())) {
-            environment.addRobot(new Robot(new Coords(Double.parseDouble(addX.getText()), Double.parseDouble(addY.getText())), environment.getNewId()));
-            spawnRobots();
+            addX.clear();
+            addY.clear();
         }
     }
 
@@ -263,13 +273,5 @@ public class GameController implements DataController<Environment> {
     private void timeCorrect() {
         textDt.setBorder(Border.EMPTY);
         textTime.setBorder(Border.EMPTY);
-    }
-
-    private double getCorrectTime() {
-        if (currentTime == 0) {
-            return Double.parseDouble(textDt.getText());
-        } else {
-            return currentTime;
-        }
     }
 }
